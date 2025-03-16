@@ -1,0 +1,12 @@
+.logo{
+    height: 50px;
+    width: 50px;
+}
+a{
+    color: white;
+    text-decoration: none;
+}
+a:hover{
+    color: blueviolet;
+    text-decoration: underline;
+}
