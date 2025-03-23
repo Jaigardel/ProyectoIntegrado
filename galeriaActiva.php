@@ -1,3 +1,7 @@
+<?php 
+    require_once("utiles/variables.php");
+    require_once("utiles/funciones.php");
+?>  
 <!DOCTYPE html>
 <html lang="es">
 <head>

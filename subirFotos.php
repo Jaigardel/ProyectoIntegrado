@@ -1,3 +1,7 @@
+<?php 
+    require_once("utiles/variables.php");
+    require_once("utiles/funciones.php");
+?>  
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,6 +29,13 @@
             </nav>
         </div>
     </header>
+    <main>
+        <input type="file" id="fileInput" />
+        <button onclick="subirImagen()">Subir Imagen</button>
+        <p id="mensaje"></p>
+        <img id="imagenSubida" width="300">
+
+    </main>
     <footer class="bg-primary text-white text-center py-3">
         <div class="row d-flex justify-content-between">
             <div class="col-sm-4 order-1 order-md-2 text-center">

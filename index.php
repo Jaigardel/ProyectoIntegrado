@@ -1,3 +1,38 @@
+<?php 
+    require_once("utiles/variables.php");
+    require_once("utiles/funciones.php");
+
+    $conexion = conectarPDO($host, $user, $password, $bbdd);
+    
+    $sql = "SELECT titulo FROM rallys WHERE estado = 1";
+    
+    $resultado = resultadoConsulta($conexion, $sql);
+
+    $registro = $resultado->fetch(PDO::FETCH_ASSOC);
+    
+    cerrarPDO();
+
+    $conexion = conectarPDO($host, $user, $password, $bbdd);
+    
+    $sql = "SELECT u.nombre AS ganador, u.apellidos AS ganadorApellidos, f.titulo AS titulo_ganadora, f.url AS foto_ganadora
+FROM fotos f
+JOIN usuarios u ON f.usuario_id = u.id
+JOIN rallys r ON f.rally_id = r.id
+LEFT JOIN (
+    SELECT foto_id, COUNT(*) AS votos
+    FROM votos
+    GROUP BY foto_id
+) v ON f.id = v.foto_id
+WHERE r.id = (SELECT id FROM rallys WHERE estado = 0 ORDER BY id DESC LIMIT 1)
+ORDER BY votos DESC
+LIMIT 1;";
+    
+    $resultado = resultadoConsulta($conexion, $sql);
+
+    $registro2 = $resultado->fetch(PDO::FETCH_ASSOC);
+    
+    cerrarPDO();
+?>    
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -58,8 +93,8 @@
                                 <img src="./imagenes/tema.jpg" class="card-img-top" alt="Foto destacada">
                                 <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                     <h5 class="card-title">Tema de la Semana</h5>
-                                    <p class="card-text">Descripción.</p>
-                                    <a href="#" class="btn btn-primary">Ver más</a>
+                                    <p class="card-text"><?php echo $registro["titulo"]?>.</p>
+                                    <a href="./galeriaActiva.php" class="btn btn-primary">Ir a la galería</a>
                                 </div>
                             </div>
                         </div>
@@ -68,8 +103,8 @@
                                 <img src="./imagenes/fotografo.jpg" class="card-img-top" alt="Foto destacada">
                                 <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                     <h5 class="card-title">Ganador de la última competición</h5>
-                                    <p class="card-text">Nombre Apellidos.</p>
-                                    <a href="#" class="btn btn-primary">Ver más</a>
+                                    <p class="card-text"><?php echo "$registro2[ganador] $registro2[ganadorApellidos]"?>.</p>
+                                    <button class="btn btn-primary" onclick="mostrar()">Ver foto</button>
                                 </div>
                             </div>
                         </div>
@@ -79,7 +114,7 @@
                                 <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                     <h5 class="card-title">Herramientas de fotografía</h5>
                                     <p class="card-text">Explora los siguientes artículos en esta tienda de confianza.</p>
-                                    <a href="https://www.fotocasion.es/?srsltid=AfmBOorQ3uI3rOmzrXQYf_8LfPxHqRp-p5lztrGvUKRK3i767WloK2FI" target="_blank" class="btn btn-primary">Ver más</a>
+                                    <a href="https://www.fotocasion.es/?srsltid=AfmBOorQ3uI3rOmzrXQYf_8LfPxHqRp-p5lztrGvUKRK3i767WloK2FI" target="_blank" class="btn btn-primary">Ir a la tienda</a>
                                 </div>
                             </div>
                         </div>
@@ -118,8 +153,28 @@
         </div>
         
     </footer>
+
     <button class="boton-sticky" onclick="scrollToTop()">↑</button>
 
+    <div class="popup" id="popup" aria-live="assertive">
+        <span class="cerrar" id="cerrar">X</span>
+        <p class="subsubtitulo"><?php echo $registro2["titulo_ganadora"]?></p>
+        <img src="<?php echo $registro2["foto_ganadora"]?>" alt="<?php echo $registro2["titulo_ganadora"]?>">
+    </div>
+
+    <script>
+        function mostrar(){
+            document.getElementById('popup').classList.add('mostrar');
+        }
+
+        document.getElementById('cerrar').addEventListener('click', () => {
+            document.getElementById('popup').classList.remove('mostrar');
+        });
+        document.addEventListener('keydown', (e) => {
+            if(e.key === "Escape")
+            document.getElementById('popup').classList.remove('mostrar');
+        });
+    </script>
     <script>
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
