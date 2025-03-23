@@ -2,11 +2,18 @@
     height: 50px;
     width: 50px;
 }
-a{
+p a{
     color: white;
     text-decoration: none;
 }
 a:hover{
     color: blueviolet;
     text-decoration: underline;
+}
+body {
+    background: url('../imagenes/fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
 }
