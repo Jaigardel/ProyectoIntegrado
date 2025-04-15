@@ -2,9 +2,6 @@
     require_once("utiles/variables.php");
     require_once("utiles/funciones.php");
 
-    require_once("utiles/variables.php");
-    require_once("utiles/funciones.php");
-
     $conexion = conectarPDO($host, $user, $password, $bbdd);
     
     $sql = "SELECT u.nombre AS ganador, u.apellidos AS ganadorApellidos, vf.descripcion AS descripcion, vf.titulo AS foto_titulo, vf.url AS enlace, vf.total_votos, r.titulo AS rally_titulo

@@ -1,12 +1,6 @@
 <?php 
     require_once("utiles/variables.php");
     require_once("utiles/funciones.php");
-
-    $conexion = conectarPDO($host, $user, $password, $bbdd);
-    
-    $sql = "SELECT titulo, descripcion, fecha_inicio, fecha_fin, url FROM rallys WHERE estado = 0";
-    
-    $resultado = resultadoConsulta($conexion, $sql);
 ?>  
 <!DOCTYPE html>
 <html lang="es">
