@@ -158,8 +158,8 @@ LIMIT 1;";
 
     <div class="popup" id="popup" aria-live="assertive">
         <span class="cerrar" id="cerrar">X</span>
-        <p class="subsubtitulo"><?php echo $registro2["titulo_ganadora"]?></p>
-        <img src="<?php echo $registro2["foto_ganadora"]?>" alt="<?php echo $registro2["titulo_ganadora"]?>">
+        <p class="subsubtitulo text-center"><?php echo $registro2["titulo_ganadora"]?></p>
+        <img src="<?php echo $registro2["foto_ganadora"]?>" alt="<?php echo $registro2["titulo_ganadora"]?>" style="max-width: 100%; height: auto; margin: 0 auto; display: block;">
     </div>
 
     <script>
