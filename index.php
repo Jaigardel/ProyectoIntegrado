@@ -15,17 +15,17 @@
     $conexion = conectarPDO($host, $user, $password, $bbdd);
     
     $sql = "SELECT u.nombre AS ganador, u.apellidos AS ganadorApellidos, f.titulo AS titulo_ganadora, f.url AS foto_ganadora
-FROM fotos f
-JOIN usuarios u ON f.usuario_id = u.id
-JOIN rallys r ON f.rally_id = r.id
-LEFT JOIN (
-    SELECT foto_id, COUNT(*) AS votos
-    FROM votos
-    GROUP BY foto_id
-) v ON f.id = v.foto_id
-WHERE r.id = (SELECT id FROM rallys WHERE estado = 0 ORDER BY id DESC LIMIT 1)
-ORDER BY votos DESC
-LIMIT 1;";
+        FROM fotos f
+        JOIN usuarios u ON f.usuario_id = u.id
+        JOIN rallys r ON f.rally_id = r.id
+        LEFT JOIN (
+            SELECT foto_id, COUNT(*) AS votos
+            FROM votos
+            GROUP BY foto_id
+        ) v ON f.id = v.foto_id
+        WHERE r.id = (SELECT id FROM rallys WHERE estado = 0 ORDER BY id DESC LIMIT 1)
+        ORDER BY votos DESC
+        LIMIT 1;";
     
     $resultado = resultadoConsulta($conexion, $sql);
 

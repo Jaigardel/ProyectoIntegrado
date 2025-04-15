@@ -1,6 +1,35 @@
 <?php 
     require_once("utiles/variables.php");
     require_once("utiles/funciones.php");
+
+    require_once("utiles/variables.php");
+    require_once("utiles/funciones.php");
+
+    $conexion = conectarPDO($host, $user, $password, $bbdd);
+    
+    $sql = "SELECT u.nombre AS ganador, u.apellidos AS ganadorApellidos, vf.descripcion AS descripcion, vf.titulo AS foto_titulo, vf.url AS enlace, vf.total_votos, r.titulo AS rally_titulo
+        FROM (
+            SELECT f.id AS foto_id, f.rally_id, f.usuario_id, f.titulo, f.descripcion, f.url, COUNT(v.id) AS total_votos
+            FROM fotos f
+            LEFT JOIN votos v ON f.id = v.foto_id
+            GROUP BY f.id, f.rally_id
+        ) AS vf
+        JOIN usuarios u ON vf.usuario_id = u.id
+        JOIN rallys r ON vf.rally_id = r.id
+        WHERE vf.total_votos = (
+            SELECT MAX(vf2.total_votos)
+            FROM (
+                SELECT f2.id, f2.rally_id, COUNT(v2.id) AS total_votos
+                FROM fotos f2
+                LEFT JOIN votos v2 ON f2.id = v2.foto_id
+                GROUP BY f2.id, f2.rally_id
+            ) AS vf2
+            WHERE vf2.rally_id = vf.rally_id
+        )";
+    
+    $resultado = resultadoConsulta($conexion, $sql);   
+    
+
 ?>  
 <!DOCTYPE html>
 <html lang="es">
@@ -37,7 +66,31 @@
             <div class="col-1" style="background-color: aliceblue; min-height: 100%;"></div>
 
             <div class="col-10 my-5">
-               
+               <div class="row">
+                        <?php 
+                           
+                            while($registro = $resultado->fetch(PDO::FETCH_ASSOC)){
+                                echo '<div class="col-md-4 mb-4">
+                                <div class="card h-100 d-flex flex-column align-items-center text-center">
+                                    <div class="card-header">
+                                        <h3 class="h5">'. $registro["rally_titulo"] .'</h3>
+                                    </div>
+                                    <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
+                                        <img src="'. $registro["enlace"] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $registro["foto_titulo"] .'">
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                                        <h5 class="card-title h5">'. $registro["foto_titulo"] .'</h5>
+                                        <p class="card-text">Fotógraf@: ' . $registro["ganador"] . " " . $registro["ganadorApellidos"] .'.</p>
+                                        <button class="btn btn-primary ampliar-btn" data-url="' . $registro["enlace"] . '" data-titulo="' . $registro["foto_titulo"] . '" data-descripcion="' . $registro["descripcion"] . '">Ampliar</button>
+                                    </div>
+                                </div></div>';
+
+                            };
+                            cerrarPDO($conexion);
+                        ?>
+                                
+                    </div>
+               </div>
             </div>
     
             <div class="col-1" style="background-color: aliceblue;"></div>
@@ -73,6 +126,40 @@
     </footer>
     <button class="boton-sticky" onclick="scrollToTop()">↑</button>
 
+
+    <div class="popup" id="popup" aria-live="assertive">
+        <span class="cerrar" id="cerrar">X</span>
+        <h1 class="subsubtitulo text-center h4" id="popupTitulo"></h1>
+        <img id="popupImg" src="" alt="" style="max-width: 100%; height: auto; margin: 0 auto; display: block;">
+        <p class="subsubtitulo text-center" id="popupDescripcion"></p>
+    </div>
+
+    <script>
+        document.querySelectorAll('.ampliar-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const titulo = btn.getAttribute('data-titulo');
+                const url = btn.getAttribute('data-url');
+                const descripcion = btn.getAttribute('data-descripcion') || 'Descripción no disponible.';
+
+                document.getElementById('popupTitulo').textContent = titulo;
+                document.getElementById('popupImg').src = url;
+                document.getElementById('popupImg').alt = titulo;
+                document.getElementById('popupDescripcion').textContent = descripcion;
+
+                document.getElementById('popup').classList.add('mostrar');
+            });
+        });
+
+        document.getElementById('cerrar').addEventListener('click', () => {
+            document.getElementById('popup').classList.remove('mostrar');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                document.getElementById('popup').classList.remove('mostrar');
+            }
+        });
+    </script>
     <script>
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
