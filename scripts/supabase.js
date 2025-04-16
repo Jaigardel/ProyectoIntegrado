@@ -1,7 +1,9 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-// Reemplaza estos valores con los de tu proyecto
+// Este código es necesario para poder usar la API de Supabase en el navegador.
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 const supabase = createClient('https://xlwpajxruqllvilzaeaa.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhsd3BhanhydXFsbHZpbHphZWFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3MDM0MDUsImV4cCI6MjA2MDI3OTQwNX0.uXV7BYxYsAhSdkpAQkM8LEg4Fn26qE44l2Zw3kOj1Po')
+
+
 
 // Función para subir una imagen
 export async function subirImagen(archivo) {
@@ -22,26 +24,6 @@ export async function subirImagen(archivo) {
     return { error }
   } else {
     console.log('Archivo subido con éxito:', data)
-    return { data }
-  }
-}
-
-// Función para obtener la URL pública de una imagen
-export async function obtenerUrlPublica(ruta) {
-  if (!ruta || ruta.trim() === "") {
-    console.error('Introduce una ruta válida.')
-    return { error: 'Introduce una ruta válida.' }
-  }
-
-  const { data, error } = supabase
-    .storage
-    .from('fotos')
-    .getPublicUrl(ruta)
-
-  if (error) {
-    console.error('Error al obtener URL pública:', error)
-    return { error }
-  } else {
     return { data }
   }
 }

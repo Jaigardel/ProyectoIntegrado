@@ -1,6 +1,17 @@
 <?php 
     require_once("utiles/variables.php");
     require_once("utiles/funciones.php");
+
+    session_start();
+    if (!isset($_SESSION["usuarioId"]) || !isset($_SESSION["rol"])) {
+        header("Location: ./login/login.php");
+        exit();
+    }
+    if (!isset($_GET["rallyId"])) {
+        header("Location: index.php");
+        exit();
+    }
+    
 ?>  
 <!DOCTYPE html>
 <html lang="es">
@@ -19,7 +30,15 @@
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
-                <p class="mb-0"><a href="/login/login.php">Identifícate</a> o <a href="/login/registro.php">Crea una cuenta</a></p>
+                <?php if ($_SESSION["rol"] == 1) { ?>
+                    <p class="mb-0"><a href="admin.php">Panel de Control</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                <?php } else if($_SESSION["rol"] == 2) { ?>
+                    <p class="mb-0"><a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+
+                <?php } else{ ?>
+                        <p class="mb-0"><a href="login/login.php">Identifícate</a> o <a href="login/registro.php">Crea una cuenta</a></p>
+                <?php }?>
+ 
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
                 <a href="index.php" class="nav-link text-white">Inicio</a>
@@ -32,16 +51,36 @@
     <main class="container-fluid flex-grow-1">
         <div class="row h-100">
             <div class="col-1" style="background-color: aliceblue;"></div>
-            <div class="col-10 my-5">
-                <input type="file" id="fileInput" />
-                <button onclick="subirImagen()">Subir Imagen</button>
-                <p id="mensaje"></p>
-                <img id="imagenSubida" width="300">
+            <div class="col-10 my-5 text-center" style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 800px; margin: auto;">
+
+                <h3>Subir una nueva foto</h3>
+
+                <form id="formularioFoto">
+                    <div class="mb-3">
+                    <label for="inputArchivo" class="form-label">Selecciona una imagen (jpg, png):</label>
+                    <input type="file" class="form-control" id="inputArchivo" accept="image/jpg, image/png" required>
+                    </div>
+
+                    <div class="mb-3">
+                    <label for="tituloFoto" class="form-label">Título:</label>
+                    <input type="text" class="form-control" id="tituloFoto" required>
+                    </div>
+
+                    <div class="mb-3">
+                    <label for="descripcionFoto" class="form-label">Descripción:</label>
+                    <textarea class="form-control" id="descripcionFoto" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="uploadBtn">Subir Imagen</button>
+                </form>
+
+                <p id="mensaje" class="mt-3"></p>
+                <img id="imagenPrevia" src="" width="300" class="mt-3" style="display: none; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); position: relative; top: 10px; left: 50%; transform: translateX(-50%);">
             </div>
             <div class="col-1" style="background-color: aliceblue;"></div>
         </div>
-
     </main>
+
     <footer class="bg-primary text-white text-center py-3">
         <div class="row d-flex justify-content-between">
             <div class="col-sm-4 order-1 order-md-2 text-center">
@@ -73,6 +112,78 @@
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+    </script>
+    <script type="module">
+        import { subirImagen } from "./scripts/supabase.js";
+
+        document.getElementById("inputArchivo").addEventListener("change", () => {
+        const archivo = document.getElementById("inputArchivo").files[0];
+        if (archivo) {
+
+            const tamanioMaximo = 50 * 1024 * 1024; // 50 MB en bytes
+
+            if (archivo.size > tamanioMaximo) {
+                document.getElementById("mensaje").textContent = "❌ El archivo es demasiado grande. El tamaño máximo permitido es de 50 MB.";
+                document.getElementById("imagenPrevia").style.display = "none"; 
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+            const img = document.getElementById("imagenPrevia");
+            img.src = e.target.result;
+            img.style.display = "block";
+            };
+            reader.readAsDataURL(archivo);
+        }
+        });
+
+        document.getElementById("formularioFoto").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const archivo = document.getElementById("inputArchivo").files[0];
+        const titulo = document.getElementById("tituloFoto").value.trim();
+        const descripcion = document.getElementById("descripcionFoto").value.trim();
+
+        if (!archivo || !titulo || !descripcion) {
+            document.getElementById("mensaje").textContent = "❌ Todos los campos son obligatorios.";
+            document.getElementById("mensaje").style.color = "red";
+            return;
+        }
+
+        const resultado = await subirImagen(archivo);
+
+        if (resultado.data) {
+            const url = `https://xlwpajxruqllvilzaeaa.supabase.co/storage/v1/object/public/fotos/${resultado.data.path}`;
+
+            const datos = {
+            url,
+            usuario_id: <?php echo $_SESSION["usuarioId"]?>, 
+            rally_id: <?php echo $_GET["rallyId"]?>, 
+            titulo,
+            descripcion
+            };
+
+            const respuesta = await fetch("guardar_url.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+            });
+
+            document.getElementById("mensaje").textContent = "✅ Imagen subida correctamente.";
+            document.getElementById("mensaje").style.color =  "green";
+            setTimeout(() => {
+                    document.getElementById("imagenPrevia").src = "";
+                    document.getElementById("imagenPrevia").style.display = "none";
+                    document.getElementById("formularioFoto").reset();
+                    document.getElementById("mensaje").textContent = "";
+                }, 3000);
+        } else {
+            document.getElementById("mensaje").textContent = "❌ Error al subir la imagen.";
+            document.getElementById("mensaje").style.color = "red";
+        }
+        
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>    

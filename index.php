@@ -1,4 +1,10 @@
 <?php 
+    session_start();
+
+    if (!isset($_SESSION["rol"])) {
+        $_SESSION["rol"] = 0;
+    }
+
     require_once("utiles/variables.php");
     require_once("utiles/funciones.php");
 
@@ -50,7 +56,15 @@
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
-                <p class="mb-0"><a href="/login/login.php">Identifícate</a> o <a href="/login/registro.php">Crea una cuenta</a></p>
+                <?php if ($_SESSION["rol"] == 1) { ?>
+                    <p class="mb-0"><a href="admin.php">Panel de Control</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                <?php } else if($_SESSION["rol"] == 2) { ?>
+                    <p class="mb-0"><a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+
+                <?php } else{ ?>
+                        <p class="mb-0"><a href="login/login.php">Identifícate</a> o <a href="login/registro.php">Crea una cuenta</a></p>
+                <?php }?>
+                
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
                 <a href="index.php" class="nav-link text-white">Inicio</a>
@@ -133,12 +147,7 @@
                 <h3 class="h5">Contacto</h3>
                 <p>Email: email@email.com</p>
                 <p>Teléfono: (+34) 123 456 789</p>
-                <p>
-                <?php  
-                    $ipUsuario = obtenerIPUsuario();
-                    echo "Tu IP es: " . $ipUsuario;
-                ?>
-                </p>
+
             </div>
             <div class="col-sm-4 order-1 order-md-2 text-center">
                 <h3 class="h5">Links</h3>

@@ -2,27 +2,31 @@
     require_once("utiles/variables.php");
     require_once("utiles/funciones.php");
 
+    session_start();
+    if (!isset($_SESSION["rol"])) {
+        $_SESSION["rol"] = 0;
+    }
+
     $conexion = conectarPDO($host, $user, $password, $bbdd);
     
     $sql = "SELECT u.nombre AS ganador, u.apellidos AS ganadorApellidos, vf.descripcion AS descripcion, vf.titulo AS foto_titulo, vf.url AS enlace, vf.total_votos, r.titulo AS rally_titulo
-        FROM (
-            SELECT f.id AS foto_id, f.rally_id, f.usuario_id, f.titulo, f.descripcion, f.url, COUNT(v.id) AS total_votos
-            FROM fotos f
-            LEFT JOIN votos v ON f.id = v.foto_id
-            GROUP BY f.id, f.rally_id
+        FROM (SELECT f.id AS foto_id, f.rally_id, f.usuario_id, f.titulo, f.descripcion, f.url, COUNT(v.id) AS total_votos
+        FROM fotos f
+        LEFT JOIN votos v ON f.id = v.foto_id
+        GROUP BY f.id, f.rally_id, f.usuario_id, f.titulo, f.descripcion, f.url
         ) AS vf
         JOIN usuarios u ON vf.usuario_id = u.id
         JOIN rallys r ON vf.rally_id = r.id
         WHERE vf.total_votos = (
             SELECT MAX(vf2.total_votos)
-            FROM (
-                SELECT f2.id, f2.rally_id, COUNT(v2.id) AS total_votos
+            FROM (SELECT f2.id, f2.rally_id, COUNT(v2.id) AS total_votos
                 FROM fotos f2
                 LEFT JOIN votos v2 ON f2.id = v2.foto_id
                 GROUP BY f2.id, f2.rally_id
             ) AS vf2
-            WHERE vf2.rally_id = vf.rally_id
-        )";
+            WHERE vf2.rally_id = vf.rally_id 
+        )
+        AND r.estado = 0;";
     
     $resultado = resultadoConsulta($conexion, $sql);   
     
@@ -45,7 +49,15 @@
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
-                <p class="mb-0"><a href="/login/login.php">Identifícate</a> o <a href="/login/registro.php">Crea una cuenta</a></p>
+                <?php if ($_SESSION["rol"] == 1) { ?>
+                    <p class="mb-0"><a href="admin.php">Panel de Control</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                <?php } else if($_SESSION["rol"] == 2) { ?>
+                    <p class="mb-0"><a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+
+                <?php } else{ ?>
+                        <p class="mb-0"><a href="login/login.php">Identifícate</a> o <a href="login/registro.php">Crea una cuenta</a></p>
+                <?php }?>
+                
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
                 <a href="index.php" class="nav-link text-white">Inicio</a>
@@ -87,7 +99,7 @@
                                 
                     </div>
                </div>
-            </div>
+            
     
             <div class="col-1" style="background-color: aliceblue;"></div>
         </div>
