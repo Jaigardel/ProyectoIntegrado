@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header class="bg-primary text-white py-3">
         <div class="container-fluid">
             <section class="d-flex justify-content-between align-items-center">
@@ -29,11 +29,17 @@
             </nav>
         </div>
     </header>
-    <main>
-        <input type="file" id="fileInput" />
-        <button onclick="subirImagen()">Subir Imagen</button>
-        <p id="mensaje"></p>
-        <img id="imagenSubida" width="300">
+    <main class="container-fluid flex-grow-1">
+        <div class="row h-100">
+            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-10 my-5">
+                <input type="file" id="fileInput" />
+                <button onclick="subirImagen()">Subir Imagen</button>
+                <p id="mensaje"></p>
+                <img id="imagenSubida" width="300">
+            </div>
+            <div class="col-1" style="background-color: aliceblue;"></div>
+        </div>
 
     </main>
     <footer class="bg-primary text-white text-center py-3">

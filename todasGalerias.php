@@ -4,7 +4,7 @@
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
     
-    $sql = "SELECT titulo, descripcion, fecha_inicio, fecha_fin, url FROM rallys WHERE estado = 0";
+    $sql = "SELECT id, titulo, descripcion, fecha_inicio, fecha_fin, url FROM rallys";
     
     $resultado = resultadoConsulta($conexion, $sql);
 ?>  
@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header class="bg-primary text-white py-3">
         <div class="container-fluid">
             <section class="d-flex justify-content-between align-items-center">
@@ -37,13 +37,43 @@
     </header>
 
 
-    <main class="container-fluid">
-        <div class="row">
-            
-            <div class="col-1" style="background-color: aliceblue; min-height: 100%;"></div>
+    <main class="container-fluid flex-grow-1">
+        <div class="row h-100">
+            <div class="col-1" style="background-color: aliceblue;"></div>
 
             <div class="col-10 my-5">
-                
+                <div class="row">
+                    <?php 
+                        while($registro = $resultado->fetch(PDO::FETCH_ASSOC)){
+                            $fechaInicio = new DateTime($registro["fecha_inicio"]);
+                            $fechaFin = new DateTime($registro["fecha_fin"]);
+                        
+                            echo '<div class="col-md-4 mb-4">
+                                <div class="card h-100 d-flex flex-column align-items-center text-center">
+                                    <div class="card-header">
+                                        <h3 class="h5">'. $registro["titulo"] .'</h3>
+                                    </div>
+                                    <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
+                                        <img src="'. $registro["url"] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $registro["titulo"] .'">
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                                        <p class="card-text">Duración: ' . $fechaInicio->format('d-m-Y') . " al " . $fechaFin->format('d-m-Y'). "</p>"; 
+                                        if($fechaFin < new DateTime()){
+                                            echo '<strong>Finalizado</strong>
+                                            <br><a href="./galeria.php?id=' . $registro["id"] . '" class="btn btn-primary ampliar-btn">Ver Fotos</a>';
+                                        } else {
+                                            echo '<strong>En curso</strong>
+                                            <br><a href="./galeriaActiva.php" class="btn btn-primary ampliar-btn">Ir a la galeria</a>';
+                                        }
+                                        echo '<br>
+                                        
+                                    </div>
+                                </div>
+                            </div>';
+                        }
+                        cerrarPDO($conexion);
+                    ?>
+                </div>
             </div>
     
             <div class="col-1" style="background-color: aliceblue;"></div>

@@ -122,6 +122,42 @@
 	}
 
 
+  function obtenerIPUsuario() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        return $_SERVER['HTTP_X_FORWARDED_FOR']; 
+    } else {
+        return $_SERVER['REMOTE_ADDR']; 
+    }
+}
+
+function renderBotonVoto($fotoId, $conexion) {
+  $ipUsuario = obtenerIPUsuario();
+
+  // Comprobamos si ya ha votado esta IP para esta foto
+  $sql = "SELECT COUNT(*) FROM votos WHERE foto_id = :foto_id AND ip = :ip";
+  $stmt = $conexion->prepare($sql);
+  $stmt->execute([
+      ':foto_id' => $fotoId,
+      ':ip' => $ipUsuario
+  ]);
+
+  $yaVotado = $stmt->fetchColumn() > 0;
+
+  if ($yaVotado) {
+      return '<button class="btn btn-secondary" disabled>Ya votaste</button>';
+  } else {
+      return '
+          <form method="post" action="">
+              <input type="hidden" name="foto_id" value="' . htmlspecialchars($fotoId) . '">
+              <button type="submit" class="btn btn-success">Votar</button>
+          </form>
+      ';
+  }
+}
+
+
 /**
  * FIN FUNCIONES TRABAJAR CON BBDD
  */

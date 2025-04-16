@@ -4,7 +4,7 @@
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
     
-    $sql = "SELECT titulo FROM rallys WHERE estado = 1";
+    $sql = "SELECT titulo, r.url AS url FROM rallys r WHERE estado = 1";
     
     $resultado = resultadoConsulta($conexion, $sql);
 
@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header class="bg-primary text-white py-3">
         <div class="container-fluid">
             <section class="d-flex justify-content-between align-items-center">
@@ -62,16 +62,15 @@
     </header>
 
 
-    <main class="container-fluid">
-        <div class="row">
-            
-            <div class="col-1" style="background-color: aliceblue; min-height: 100%;"></div>
+    <main class="container-fluid flex-grow-1">
+        <div class="row h-100">
+            <div class="col-1" style="background-color: aliceblue;"></div>
 
             <div class="col-10 my-5">
                 <div class="row d-flex align-items-center">
                     <div class="col-md-4 order-1 order-md-2 text-center my-2">
                         <div class="animation">
-                            <img src="./imagenes/fotografia.gif" class="img-fluid" alt="Animación">
+                            <img src="./imagenes/pinguino.gif" class="img-fluid" alt="Animación">
                         </div>
                     </div>
                     <div class="col-md-6 order-2 order-md-1" style="background: rgba(245, 245, 220, 0.7); font-weight: bold; margin-left: 5%; max-width: 90%;">
@@ -90,7 +89,7 @@
                     <div class="row">
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 d-flex flex-column align-items-center text-center">
-                                <img src="./imagenes/tema.jpg" class="card-img-top" alt="Foto destacada">
+                                <img src="<?php echo $registro["url"]?>" class="card-img-top" alt="Foto destacada">
                                 <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                     <h5 class="card-title">Tema de la Semana</h5>
                                     <p class="card-text"><?php echo $registro["titulo"]?>.</p>
@@ -134,6 +133,12 @@
                 <h3 class="h5">Contacto</h3>
                 <p>Email: email@email.com</p>
                 <p>Teléfono: (+34) 123 456 789</p>
+                <p>
+                <?php  
+                    $ipUsuario = obtenerIPUsuario();
+                    echo "Tu IP es: " . $ipUsuario;
+                ?>
+                </p>
             </div>
             <div class="col-sm-4 order-1 order-md-2 text-center">
                 <h3 class="h5">Links</h3>
