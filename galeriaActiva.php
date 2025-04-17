@@ -21,23 +21,35 @@
         $fotoId = $_POST["foto_id"];
         $ipUsuario = obtenerIPUsuario();
     
-        $sql = "SELECT COUNT(*) FROM votos WHERE foto_id = :foto_id AND ip = :ip";
-        $stmt = $conexion->prepare($sql);
-        $stmt->execute([
-            ':foto_id' => $fotoId,
-            ':ip' => $ipUsuario
-        ]);
-    
-        if ($stmt->fetchColumn() == 0) {
-            $sqlInsert = "INSERT INTO votos (foto_id, ip) VALUES (:foto_id, :ip)";
-            $stmtInsert = $conexion->prepare($sqlInsert);
-            $stmtInsert->execute([
+        if (isset($_POST["quitar_voto"])) {
+            // Eliminar el voto
+            $sqlDelete = "DELETE FROM votos WHERE foto_id = :foto_id AND ip = :ip";
+            $stmtDelete = $conexion->prepare($sqlDelete);
+            $stmtDelete->execute([
                 ':foto_id' => $fotoId,
                 ':ip' => $ipUsuario
             ]);
-            echo "<div class='alert alert-success text-center'>✅ ¡Gracias por tu voto!</div>";
+            echo "<div class='alert alert-info text-center'>🗑️ Tu voto fue eliminado.</div>";
         } else {
-            echo "<div class='alert alert-warning text-center'>⚠️ Ya votaste por esta foto.</div>";
+            // Insertar voto si no existe
+            $sql = "SELECT COUNT(*) FROM votos WHERE foto_id = :foto_id AND ip = :ip";
+            $stmt = $conexion->prepare($sql);
+            $stmt->execute([
+                ':foto_id' => $fotoId,
+                ':ip' => $ipUsuario
+            ]);
+    
+            if ($stmt->fetchColumn() == 0) {
+                $sqlInsert = "INSERT INTO votos (foto_id, ip) VALUES (:foto_id, :ip)";
+                $stmtInsert = $conexion->prepare($sqlInsert);
+                $stmtInsert->execute([
+                    ':foto_id' => $fotoId,
+                    ':ip' => $ipUsuario
+                ]);
+                echo "<div class='alert alert-success text-center'>✅ ¡Gracias por tu voto!</div>";
+            } else {
+                echo "<div class='alert alert-warning text-center'>⚠️ Ya votaste por esta foto.</div>";
+            }
         }
     }
     

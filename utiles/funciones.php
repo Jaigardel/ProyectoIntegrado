@@ -135,7 +135,7 @@
 function renderBotonVoto($fotoId, $conexion) {
   $ipUsuario = obtenerIPUsuario();
 
-  // Comprobamos si ya ha votado esta IP para esta foto
+  // Verificamos si la IP ya votó por esta foto
   $sql = "SELECT COUNT(*) FROM votos WHERE foto_id = :foto_id AND ip = :ip";
   $stmt = $conexion->prepare($sql);
   $stmt->execute([
@@ -146,8 +146,16 @@ function renderBotonVoto($fotoId, $conexion) {
   $yaVotado = $stmt->fetchColumn() > 0;
 
   if ($yaVotado) {
-      return '<button class="btn btn-secondary" disabled>Ya votaste</button>';
+      // Mostrar botón para quitar voto
+      return '
+          <form method="post" action="">
+              <input type="hidden" name="foto_id" value="' . htmlspecialchars($fotoId) . '">
+              <input type="hidden" name="quitar_voto" value="1">
+              <button type="submit" class="btn btn-danger">Quitar Voto</button>
+          </form>
+      ';
   } else {
+      // Mostrar botón para votar
       return '
           <form method="post" action="">
               <input type="hidden" name="foto_id" value="' . htmlspecialchars($fotoId) . '">
@@ -156,6 +164,7 @@ function renderBotonVoto($fotoId, $conexion) {
       ';
   }
 }
+
 
 
 /**

@@ -1,10 +1,10 @@
 <?php 
-    require_once("utiles/variables.php");
-    require_once("utiles/funciones.php");
+    require_once("../utiles/variables.php");
+    require_once("../utiles/funciones.php");
 
     session_start();
-    if (!isset($_SESSION["rol"]) ||  $_SESSION["rol"] != 2 || !isset($_SESSION["usuarioId"])) {
-        header("Location: index.php");
+    if (!isset($_SESSION["rol"]) ||  $_SESSION["rol"] != 1 || !isset($_SESSION["usuarioId"])) {
+        header("Location: ../index.php");
         exit();
     }
 
@@ -45,7 +45,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rally Fotográfico</title>
     <link rel="icon" href="/imagenes/favicon.png" type="image/png">
-    <link rel="stylesheet" href="./estilos/estilos.css">
+    <link rel="stylesheet" href="../estilos/estilos.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -53,15 +53,15 @@
     <header class="bg-primary text-white py-3">
         <div class="container-fluid">
             <section class="d-flex justify-content-between align-items-center">
-                <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
+                <img class="logo mb-0" src="../imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
-                <p class="mb-0"><a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                <p class="mb-0"><a href="../admin.php">Panel de Control</a> o <a href="../login/cerrarSesion.php">Cerrar Sesion</a></p>
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
-                <a href="index.php" class="nav-link text-white">Inicio</a>
-                <a href="galeriaActiva.php" class="nav-link text-white">Galería Activa</a>
-                <a href="todasGalerias.php" class="nav-link text-white">Todas Las Galerías</a>
-                <a href="fotosGanadoras.php" class="nav-link text-white">Fotos Ganadoras</a>
+                <a href="../index.php" class="nav-link text-white">Inicio</a>
+                <a href="../galeriaActiva.php" class="nav-link text-white">Galería Activa</a>
+                <a href="../todasGalerias.php" class="nav-link text-white">Todas Las Galerías</a>
+                <a href="../fotosGanadoras.php" class="nav-link text-white">Fotos Ganadoras</a>
             </nav>
         </div>
     </header>
