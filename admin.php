@@ -43,7 +43,7 @@
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
-                <p class="mb-0"><a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
                 <a href="index.php" class="nav-link text-white">Inicio</a>
@@ -62,34 +62,45 @@
             <div class="col-10 my-5">
                 <div class="container menu-container">
                     <div class="row text-center justify-content-center gap-4">
-                        <div class="col-10 col-md-3 d-flex align-items-stretch">
+                        <div class="col-10 col-md-5 d-flex align-items-stretch">
                             <div class="card shadow border-primary h-100 w-100">
                                 <div class="card-body d-flex flex-column justify-content-between">
                                     <div>
-                                        <h5 class="card-title">📷 Gestionar Fotos</h5>
+                                        <h5 class="card-title">Gestionar Fotos</h5>
                                         <p class="card-text">Administra las fotos subidas por los usuarios.</p>
                                     </div>
                                     <a href="./admin/fotosAdmin.php" class="btn btn-primary mt-3">Ir</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-10 col-md-3 d-flex align-items-stretch">
+                        <div class="col-10 col-md-5 d-flex align-items-stretch">
                             <div class="card shadow border-success h-100 w-100">
                                 <div class="card-body d-flex flex-column justify-content-between">
                                     <div>
-                                        <h5 class="card-title">👤 Gestión de Usuarios</h5>
+                                        <h5 class="card-title">Gestión de Usuarios</h5>
                                         <p class="card-text">Ver, editar o eliminar usuarios registrados.</p>
                                     </div>
                                     <a href="./admin/gestionUsuarios.php" class="btn btn-success mt-3">Ir</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-10 col-md-3 d-flex align-items-stretch">
-                            <div class="card shadow border-warning h-100 w-100">
+                        <div class="col-10 col-md-5 d-flex align-items-stretch">
+                            <div class="card shadow border-info h-100 w-100">
                                 <div class="card-body d-flex flex-column justify-content-between">
                                     <div>
-                                        <h5 class="card-title">🏁 Gestión de Rallys</h5>
+                                        <h5 class="card-title">Gestión de Rallys</h5>
                                         <p class="card-text">Organiza y administra los rallys fotográficos.</p>
+                                    </div>
+                                    <a href="./admin/gestionRallys.php" class="btn btn-info mt-3">Ir</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-10 col-md-5 d-flex align-items-stretch">
+                            <div class="card shadow border-info h-100 w-100">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h5 class="card-title">Añadir Rallys</h5>
+                                        <p class="card-text">Añade nuevos rallys fotográficos.</p>
                                     </div>
                                     <a href="./admin/gestionRallys.php" class="btn btn-warning mt-3">Ir</a>
                                 </div>

@@ -72,7 +72,7 @@
                 <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
                 <?php if ($_SESSION["rol"] == 1) { ?>
-                    <p class="mb-0"><a href="admin.php">Panel de Control</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                    <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
                 <?php } else if($_SESSION["rol"] == 2) { ?>
                     <p class="mb-0"><a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
 
@@ -110,7 +110,7 @@
                             <img src="./imagenes/pinguino.gif" class="img-fluid" alt="Animación">
                         </div>
                     </div>
-                    <div class="col-md-6 order-2 order-md-1" style="background: rgba(245, 245, 220, 0.7); font-weight: bold; margin-left: 5%; max-width: 90%;">
+                    <div class="col-md-6 order-2 order-md-1" style="font-weight: bold; margin-left: 5%; max-width: 90%;">
                         <h2><?php echo $foto["tema"]?></h2>
                         <p><?php echo $foto["descripcion"]?></p>
                     </div>

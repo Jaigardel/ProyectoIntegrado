@@ -50,7 +50,7 @@
                 <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
                 <?php if ($_SESSION["rol"] == 1) { ?>
-                    <p class="mb-0"><a href="admin.php">Panel de Control</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                    <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
                 <?php } else if($_SESSION["rol"] == 2) { ?>
                     <p class="mb-0"><a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
 

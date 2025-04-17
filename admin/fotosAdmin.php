@@ -11,30 +11,39 @@
     $conexion = conectarPDO($host, $user, $password, $bbdd);
     $usuario_id = $_SESSION["usuarioId"];
 
-    // Fotos de rally ACTIVO (estado = 1)
-    $sqlActivas = "SELECT f.id AS foto_id, f.titulo AS foto_titulo, f.descripcion AS descripcion, f.url AS url, f.estado AS fotoEstado,
-        COUNT(DISTINCT v.id) AS total_votos
+
+    $sqlActivas = "SELECT f.id AS foto_id, 
+       f.titulo AS foto_titulo, 
+       f.descripcion AS descripcion, 
+       f.url AS url, 
+       f.estado AS fotoEstado,
+       COUNT(DISTINCT v.id) AS total_votos
         FROM fotos f
         LEFT JOIN votos v ON f.id = v.foto_id
         JOIN rallys r ON f.rally_id = r.id
-        WHERE f.usuario_id = :usuario_id AND r.estado = 1
-        GROUP BY f.id, f.titulo, f.descripcion, f.url, f.estado";
+        WHERE r.estado = 1
+        GROUP BY f.id, f.titulo, f.descripcion, f.url, f.estado;
+        ";
 
     $stmtActivas = $conexion->prepare($sqlActivas);
-    $stmtActivas->execute([':usuario_id' => $usuario_id]);
+    $stmtActivas->execute();
     $fotosActivas = $stmtActivas->fetchAll(PDO::FETCH_ASSOC);
-
-    // Fotos de rally FINALIZADO (estado = 0)
-    $sqlHistorial = "SELECT f.id AS foto_id, f.titulo AS foto_titulo, f.descripcion AS descripcion, f.url AS url, f.estado AS fotoEstado,
-        COUNT(DISTINCT v.id) AS total_votos
+    
+    $sqlHistorial = "SELECT f.id AS foto_id, 
+       f.titulo AS foto_titulo, 
+       f.descripcion AS descripcion, 
+       f.url AS url, 
+       f.estado AS fotoEstado,
+       COUNT(DISTINCT v.id) AS total_votos
         FROM fotos f
         LEFT JOIN votos v ON f.id = v.foto_id
         JOIN rallys r ON f.rally_id = r.id
-        WHERE f.usuario_id = :usuario_id AND r.estado = 0
-        GROUP BY f.id, f.titulo, f.descripcion, f.url, f.estado";
+        WHERE r.estado = 0
+        GROUP BY f.id, f.titulo, f.descripcion, f.url, f.estado;
+        ";
 
     $stmtHistorial = $conexion->prepare($sqlHistorial);
-    $stmtHistorial->execute([':usuario_id' => $usuario_id]);
+    $stmtHistorial->execute();
     $fotosHistorial = $stmtHistorial->fetchAll(PDO::FETCH_ASSOC);
 
 ?>  
@@ -55,7 +64,7 @@
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="../imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
-                <p class="mb-0"><a href="../admin.php">Panel de Control</a> o <a href="../login/cerrarSesion.php">Cerrar Sesion</a></p>
+                <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
                 <a href="../index.php" class="nav-link text-white">Inicio</a>
@@ -113,9 +122,12 @@
 
                                         <?php if ($estado == 0): ?>
                                             <div class="d-flex gap-2 mt-2">
-                                                <a href="modificarFoto.php?id=<?= $foto['foto_id'] ?>" class="btn btn-sm btn-outline-primary">Modificar</a>
-                                                <a href="eliminarFoto.php?id=<?= $foto['foto_id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Seguro que deseas eliminar esta foto?')">Eliminar</a>
+                                                <a href="cambiarEstado.php?id=<?= $foto['foto_id'] ?>&estado=1" class="btn btn-sm btn-outline-success">Activar</a>
+                                                <a href="cambiarEstado.php?id=<?= $foto['foto_id'] ?>&estado=2" class="btn btn-sm btn-outline-danger">Cancelar</a>
                                             </div>
+
+                                        <?php elseif($foto['total_votos'] < 1): ?>
+                                            <a href="cambiarEstado.php?id=<?= $foto['foto_id'] ?>&estado=0" class="btn btn-sm btn-outline-secondary">Poner en espera</a>
                                         <?php endif; ?>
                                     </div>
                                     <div class="card-footer w-100 <?= $estadoTexto[1] ?>">
