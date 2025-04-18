@@ -64,7 +64,7 @@
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="../imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
-                <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                <p class="mb-0"><a href="../admin.php">Panel de Control</a>, <a href="../usuario.php">Ver mis Fotos</a> o <a href="../login/cerrarSesion.php">Cerrar Sesion</a></p>
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
                 <a href="../index.php" class="nav-link text-white">Inicio</a>

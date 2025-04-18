@@ -21,7 +21,7 @@
                 $confirmar_password = $_POST["confirmar_password"];
 
                 if($_POST["password"] === $confirmar_password){
-                    $sqlInsert = "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol_id, activo) VALUES (:nombre, :apellidos, :email, :contrasena, 2, 0)";
+                    $sqlInsert = "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol_id, estado) VALUES (:nombre, :apellidos, :email, :contrasena, 2, 0)";
                     $stmtInsert = $conexion->prepare($sqlInsert);
                     $stmtInsert->bindParam(':nombre', $nombre);
                     $stmtInsert->bindParam(':apellidos', $apellidos);

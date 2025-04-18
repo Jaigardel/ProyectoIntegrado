@@ -29,7 +29,7 @@
             FROM votos
             GROUP BY foto_id
         ) v ON f.id = v.foto_id
-        WHERE r.id = (SELECT id FROM rallys WHERE estado = 0 ORDER BY id DESC LIMIT 1)
+        WHERE r.id = (SELECT id FROM rallys WHERE estado = 2 ORDER BY id DESC LIMIT 1)
         ORDER BY votos DESC
         LIMIT 1;";
     

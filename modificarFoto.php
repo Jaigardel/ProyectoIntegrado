@@ -57,12 +57,6 @@
             $stmt->bindParam(':usuarioId', $usuarioId);
             $stmt->execute();
             
-            if ($stmt->rowCount() == 0) {
-                echo "<div class='alert alert-danger text-center'>⚠️ No se pudo modificar la foto.</div>";
-                header("Refresh: 2; url=modificarFoto.php?id=$fotoId");
-                exit();
-            }
-            
             echo "<div class='alert alert-success text-center'>✅ Foto modificada correctamente.</div>";
             if($_SESSION["rol"] == 1){
                 header("Refresh: 2; url=./admin/fotosAdmin.php");
@@ -133,6 +127,11 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">Modificar Imagen</button>
+                    <?php if($_SESSION["rol"] == 1){ ?>
+                        <a href="./admin/fotosAdmin.php" class="btn btn-secondary">Volver</a>
+                    <?php }else{ ?>
+                        <a href="usuario.php" class="btn btn-secondary">Volver</a>
+                    <?php } ?>
                 </form>
             </div>
             <div class="col-1" style="background-color: aliceblue;"></div>

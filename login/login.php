@@ -4,22 +4,39 @@
 
     session_start();
     if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+        if(!isset($_POST["email"]) || !isset($_POST["contrasena"])){
+            $error = "Por favor, completa todos los campos.";
+            header("Refresh: 2; url=login.php");
+            exit();
+        }
+        if(empty($_POST["email"]) || empty($_POST["contrasena"])){
+            $error = "Por favor, completa todos los campos.";
+            header("Refresh: 2; url=login.php");
+            exit();
+        }
+        if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)){
+            $error = "El formato del email no es correcto.";
+            header("Refresh: 2; url=login.php");
+            exit();
+        }
+        $clave = $_POST["contrasena"];
         $conexion = conectarPDO($host, $user, $password, $bbdd);
         
-        $sql = "SELECT id, rol_id FROM usuarios WHERE email = :email AND contrasena = :contrasena";
+        $sql = "SELECT id, rol_id, contrasena FROM usuarios WHERE email = :email";
         $stmt = $conexion->prepare($sql);
         $stmt->bindParam(':email', $_POST["email"]);
-        $stmt->bindParam(':contrasena', $_POST["contrasena"]);
         $stmt->execute();
         if($stmt->rowCount() > 0){
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            $_SESSION["usuarioId"] = $resultado["id"];
-            $_SESSION["rol"] = $resultado["rol_id"];
-            header("Location: ../index.php");
-            exit();
-        }else{
-            $error = "Email o contraseña incorrectos.";
+            if(password_verify($clave, $resultado["contrasena"])){
+                $_SESSION["usuarioId"] = $resultado["id"];
+                $_SESSION["rol"] = $resultado["rol_id"];
+                header("Location: ../index.php");
+                exit();
+            }
         }
+        $error = "Email o contraseña incorrectos.";
         cerrarPDO();
     }
 

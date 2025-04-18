@@ -22,6 +22,6 @@ if (isset($_GET['rally_id'], $_GET['nuevo_estado'])) {
 }
 
 
-header("Location: crearRally.php");
+header("Location: gestionRallys.php");
 exit();
 ?>

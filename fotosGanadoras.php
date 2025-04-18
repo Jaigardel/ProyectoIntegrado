@@ -26,7 +26,7 @@
             ) AS vf2
             WHERE vf2.rally_id = vf.rally_id 
         )
-        AND r.estado = 0;";
+        AND r.estado = 2;";
     
     $resultado = resultadoConsulta($conexion, $sql);   
     

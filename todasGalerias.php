@@ -10,7 +10,7 @@
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
     
-    $sql = "SELECT id, titulo, descripcion, fecha_inicio, fecha_fin, url FROM rallys";
+    $sql = "SELECT id, titulo, descripcion, fecha_inicio, fecha_fin, url FROM rallys WHERE estado != 0";
     
     $resultado = resultadoConsulta($conexion, $sql);
 ?>  

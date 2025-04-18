@@ -102,7 +102,7 @@
                                         <h5 class="card-title">Añadir Rallys</h5>
                                         <p class="card-text">Añade nuevos rallys fotográficos.</p>
                                     </div>
-                                    <a href="./admin/gestionRallys.php" class="btn btn-warning mt-3">Ir</a>
+                                    <a href="./admin/anadirRallys.php" class="btn btn-warning mt-3">Ir</a>
                                 </div>
                             </div>
                         </div>

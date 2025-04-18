@@ -9,6 +9,13 @@
     }
 
 
+    $conexion = conectarPDO($host, $user, $password, $bbdd);
+    $sql = "SELECT id, nombre, apellidos, email, estado FROM usuarios WHERE rol_id = 2";
+    $stmt = $conexion->prepare($sql);
+    $stmt->execute();
+    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $conexion = null;
+
 ?>  
 <!DOCTYPE html>
 <html lang="es">
@@ -27,7 +34,7 @@
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="../imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
                 <h2 class="mb-0">Rally Fotográfico</h2>
-                <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+                <p class="mb-0"><a href="../admin.php">Panel de Control</a>, <a href="../usuario.php">Ver mis Fotos</a> o <a href="../login/cerrarSesion.php">Cerrar Sesion</a></p>
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
             <a href="../index.php" class="nav-link text-white">Inicio</a>
@@ -44,7 +51,63 @@
             <div class="col-1" style="background-color: aliceblue;"></div>
 
             <div class="col-10 my-5">
-            
+            <div style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 800px; margin: auto;">   
+                <h3 class="mb-4 text-center">Crear Nuevo Administrador</h3>
+                    <form action="crearAdministrador.php" method="POST" class="mx-auto" style="max-width: 600px;">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellidos" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Crear Administrador</button>
+                    </form>
+                </div>
+                <hr class="my-5">  
+
+                <h3 class="mb-4 text-center">Gestión de Usuarios</h3>
+                <table class="table table-bordered table-hover text-center">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellidos</th>
+                            <th>Email</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($usuarios as $usuario): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($usuario['nombre']) ?></td>
+                                <td><?= htmlspecialchars($usuario['apellidos']) ?></td>
+                                <td><?= htmlspecialchars($usuario['email']) ?></td>
+                                <td>
+                                    <?= $usuario['estado'] ? 'Activo' : 'Inactivo' ?>
+                                </td>
+                                <td>
+                                    <a href="cambiarEstadoUsuario.php?usuario_id=<?= $usuario['id'] ?>&nuevo_estado=<?= $usuario['estado'] ? 0 : 1 ?>" 
+                                    class="btn btn-sm btn-<?= $usuario['estado'] ? 'danger' : 'success' ?>">
+                                        <?= $usuario['estado'] ? 'Inactivar' : 'Activar' ?>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                
+                            
             </div>
     
             <div class="col-1" style="background-color: aliceblue;"></div>
