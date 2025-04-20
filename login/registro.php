@@ -28,9 +28,7 @@
                     $stmtInsert->bindParam(':email', $email);
                     $stmtInsert->bindParam(':contrasena', $password);
                     if($stmtInsert->execute()){
-                        echo "<h1 class='exito'>Usuario registrado con éxito.</h1>";
-                        header("Refresh:3 ,url=../index.php");
-                        exit();
+                        $exito = "Usuario registrado con éxito. Un administrador validará tu cuenta lo antes posible.";
                     }else{
                         $error = "Error al registrar el usuario.";
                     }
@@ -60,7 +58,9 @@
         <div class="container-fluid">
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="../imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
-                <h2 class="mb-0">Rally Fotográfico</h2>
+                <h2 class="mb-0">
+                    <a href="../index.php" class="titulo-link">Rally Fotográfico</a>
+                </h2>
                 <div>.</div>
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
@@ -83,27 +83,29 @@
                     <form action="registro.php" method="POST" class="mx-auto" style="max-width: 600px;">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" required>
+                            <input type="text" name="nombre" id="nombre" class="form-control" required value="<?= !isset($exito) ? htmlspecialchars($_POST['nombre'] ?? '') : '' ?>">
                         </div>
 
                         <div class="mb-3">
                             <label for="apellidos" class="form-label">Apellidos</label>
-                            <input type="text" name="apellidos" id="apellidos" class="form-control" required>
+                            <input type="text" name="apellidos" id="apellidos" class="form-control" required value="<?= !isset($exito) ? htmlspecialchars($_POST['apellidos'] ?? '') : '' ?>">
                         </div>
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Correo electrónico</label>
-                            <input type="email" name="email" id="email" class="form-control" required>
+                            <input type="email" name="email" id="email" class="form-control" required value="<?= !isset($exito) ? htmlspecialchars($_POST['email'] ?? '') : '' ?>">
                         </div>
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Contraseña</label>
                             <input type="password" name="password" id="password" class="form-control" minlength="6" required>
+                            <small id="passwordHelp" class="form-text text-muted">La contraseña debe tener al menos 6 caracteres.</small>
                         </div>
 
                         <div class="mb-3">
                             <label for="confirmar_password" class="form-label">Confirmar contraseña</label>
                             <input type="password" name="confirmar_password" id="confirmar_password" class="form-control" required>
+                            <small id="passwordHelp" class="form-text text-muted">La contraseña debe tener al menos 6 caracteres.</small>
                         </div>
 
                         <div class="d-grid">
@@ -113,7 +115,9 @@
                     <?php if (isset($error)): ?>
                         <p class="text-danger mt-3"><?php echo $error; ?></p>
                     <?php endif; ?>
-
+                    <?php if (isset($exito)): ?>
+                        <p class="text-success mt-3"><?php echo $exito; ?></p>
+                    <?php endif; ?>
                     <p class="mt-3">¿Ya tienes una cuenta? <a href="login.php" style="color:blue">Inicia sesión aquí</a></p>
                 </div>    
             </div>

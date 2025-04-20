@@ -55,7 +55,9 @@
         <div class="container-fluid">
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
-                <h2 class="mb-0">Rally Fotográfico</h2>
+                <h2 class="mb-0">
+                    <a href="index.php" class="titulo-link">Rally Fotográfico</a>
+                </h2>
                 <?php if ($_SESSION["rol"] == 1) { ?>
                     <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
                 <?php } else if($_SESSION["rol"] == 2) { ?>
@@ -102,21 +104,31 @@
                 <section class="container my-5">
                     <div class="row">
                         <div class="col-md-4 mb-4">
-                            <div class="card h-100 d-flex flex-column align-items-center text-center">
-                                <img src="<?php echo $registro["url"]?>" class="card-img-top" alt="Foto destacada">
-                                <div class="card-body d-flex flex-column justify-content-between align-items-center">
-                                    <h5 class="card-title">Tema de la Semana</h5>
-                                    <p class="card-text"><?php echo $registro["titulo"]?>.</p>
-                                    <a href="./galeriaActiva.php" class="btn btn-primary">Ir a la galería</a>
+                            <?php if ($registro): ?>
+                                <div class="card h-100 d-flex flex-column align-items-center text-center">
+                                    <img src="<?php echo $registro["url"] ?>" class="card-img-top" alt="Foto destacada">
+                                    <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                                        <h5 class="card-title">Tema de la Semana</h5>
+                                        <p class="card-text"><?php echo $registro["titulo"] ?>.</p>
+                                        <a href="./galeriaActiva.php" class="btn btn-primary">Ir a la galería</a>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php else: ?>
+                                <div class="card h-100 d-flex flex-column align-items-center text-center">
+                                    <img src="./imagenes/vacio.jpg" class="card-img-top" alt="No hay galería activa">
+                                    <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                                        <h5 class="card-title">No hay galería activa</h5>
+                                        <p class="card-text">Actualmente no hay un concurso activo. ¡Vuelve pronto!</p>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 d-flex flex-column align-items-center text-center">
                                 <img src="./imagenes/fotografo.jpg" class="card-img-top" alt="Foto destacada">
                                 <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                     <h5 class="card-title">Ganador de la última competición</h5>
-                                    <p class="card-text"><?php echo "$registro2[ganador] $registro2[ganadorApellidos]"?>.</p>
+                                    <p class="card-text"><?php echo "$registro2[ganador] $registro2[ganadorApellidos]" ?>.</p>
                                     <button class="btn btn-primary" onclick="mostrar()">Ver foto</button>
                                 </div>
                             </div>

@@ -97,3 +97,11 @@ body {
     cursor: pointer;
     text-align: center;
 }
+
+.titulo-link {
+    color: white;
+    text-decoration: none;
+}
+.titulo-link:hover {
+    font-size: larger;
+}

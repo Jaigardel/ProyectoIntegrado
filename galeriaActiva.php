@@ -15,14 +15,18 @@
     
     $foto = $resultado->fetch(PDO::FETCH_ASSOC);
 
-    $fechaFin = $foto["fin"];
+    $hayGaleriaActiva = $foto ? true : false;
+
+    if ($hayGaleriaActiva) {
+        $fechaFin = $foto["fin"];
+    }
+ 
 
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["foto_id"])) {
         $fotoId = $_POST["foto_id"];
         $ipUsuario = obtenerIPUsuario();
     
         if (isset($_POST["quitar_voto"])) {
-            // Eliminar el voto
             $sqlDelete = "DELETE FROM votos WHERE foto_id = :foto_id AND ip = :ip";
             $stmtDelete = $conexion->prepare($sqlDelete);
             $stmtDelete->execute([
@@ -31,7 +35,6 @@
             ]);
             echo "<div class='alert alert-info text-center'>🗑️ Tu voto fue eliminado.</div>";
         } else {
-            // Insertar voto si no existe
             $sql = "SELECT COUNT(*) FROM votos WHERE foto_id = :foto_id AND ip = :ip";
             $stmt = $conexion->prepare($sql);
             $stmt->execute([
@@ -64,13 +67,16 @@
     <link rel="stylesheet" href="./estilos/estilos.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header class="bg-primary text-white py-3">
         <div class="container-fluid">
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
-                <h2 class="mb-0">Rally Fotográfico</h2>
+                <h2 class="mb-0">
+                    <a href="index.php" class="titulo-link">Rally Fotográfico</a>
+                </h2>
                 <?php if ($_SESSION["rol"] == 1) { ?>
                     <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
                 <?php } else if($_SESSION["rol"] == 2) { ?>
@@ -93,55 +99,66 @@
 
     <main class="container-fluid flex-grow-1">
         <div class="row h-100">
+            <?php if ($hayGaleriaActiva): ?>
             <div class="d-flex justify-content-center align-items-center" style="background: rgba(245, 245, 220, 0.7); max-width: 100%;">
                 <h2 class="h2 text-danger">
                     Tiempo Restante: 
                     <span id="contador" class="fs-4 fw-bold text-danger"></span>
                 </h2>
-                
             </div>
+            <?php endif ?>
+
             <div class="col-1" style="background-color: aliceblue;"></div>
 
-            <div class="col-10 my-5 ">
-                
-                <div class="row d-flex align-items-center">
-                    <div class="col-md-4 order-1 order-md-2 text-center my-2">
-                        <div class="animation">
-                            <img src="./imagenes/pinguino.gif" class="img-fluid" alt="Animación">
+            <div class="col-10 my-5">
+                <?php if ($hayGaleriaActiva): ?>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-4 order-1 order-md-2 text-center my-2">
+                            <div class="container my-5">
+                                <h3 class="text-center">📊 Resultados de Votación en Tiempo Real</h3>
+                                <canvas id="graficoVotos" style="max-width: 300px;"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-6 order-2 order-md-1" style="font-weight: bold; margin-left: 5%; max-width: 90%;">
+                            <h2><?php echo $foto["tema"]?></h2>
+                            <p><?php echo $foto["descripcion"]?></p>
                         </div>
                     </div>
-                    <div class="col-md-6 order-2 order-md-1" style="font-weight: bold; margin-left: 5%; max-width: 90%;">
-                        <h2><?php echo $foto["tema"]?></h2>
-                        <p><?php echo $foto["descripcion"]?></p>
-                    </div>
-                </div>
-                <div class="row">
-                    <?php
-                        do {
-                            echo '
-                                <div class="col-md-4 mb-4">
-                                    <div class="card h-100 d-flex flex-column align-items-center text-center">
-                                        <div class="card-header">
-                                            <h3 class="h5">'. $foto["titulo"] .'</h3>
-                                        </div>
-                                        <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
-                                            <img src="'. $foto['url'] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $foto['titulo'] .'">
-                                        </div>
-                                        <div class="card-body d-flex flex-column justify-content-between align-items-center">
-                                            <p class="card-text">' . $foto['descripcionFoto'] . '</p>
-                                            ' . renderBotonVoto($foto['id'], $conexion) . '
+                    <div class="row">
+                        <?php
+                            do {
+                                echo '
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100 d-flex flex-column align-items-center text-center">
+                                            <div class="card-header">
+                                                <h3 class="h5">'. $foto["titulo"] .'</h3>
+                                            </div>
+                                            <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
+                                                <img src="'. $foto['url'] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $foto['titulo'] .'">
+                                            </div>
+                                            <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                                                <p class="card-text">' . $foto['descripcionFoto'] . '</p>
+                                                ' . renderBotonVoto($foto['id'], $conexion) . '
+                                                <br><button class="btn btn-primary ampliar-btn" data-url="' . $foto["url"] . '" data-titulo="' . $foto["titulo"] . '" data-descripcion="' . $foto["descripcionFoto"] . '">Ampliar</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ';
-                        }while($foto = $resultado->fetch(PDO::FETCH_ASSOC))
-                    ?>
-                </div>
+                                ';
+                            } while ($foto = $resultado->fetch(PDO::FETCH_ASSOC));
+                        ?>
+                    </div>
+                <?php else: ?>
+                    <!-- Mostrar mensaje si no hay galería activa -->
+                    <div class="alert alert-warning text-center">
+                        ⚠️ No hay galería activa en este momento.
+                    </div>
+                <?php endif; ?>
             </div>
-    
+
             <div class="col-1" style="background-color: aliceblue;"></div>
         </div>
     </main>
+
     
     
 
@@ -172,6 +189,40 @@
     </footer>
     <button class="boton-sticky" onclick="scrollToTop()">↑</button>
 
+    <div class="popup" id="popup" aria-live="assertive">
+        <span class="cerrar" id="cerrar">X</span>
+        <h1 class="subsubtitulo text-center h4" id="popupTitulo"></h1>
+        <img id="popupImg" src="" alt="" style="max-width: 100%; height: auto; margin: 0 auto; display: block;">
+        <p class="subsubtitulo text-center" id="popupDescripcion"></p>
+    </div>
+
+    <script>
+        document.querySelectorAll('.ampliar-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const titulo = btn.getAttribute('data-titulo');
+                const url = btn.getAttribute('data-url');
+                const descripcion = btn.getAttribute('data-descripcion') || 'Descripción no disponible.';
+
+                document.getElementById('popupTitulo').textContent = titulo;
+                document.getElementById('popupImg').src = url;
+                document.getElementById('popupImg').alt = titulo;
+                document.getElementById('popupDescripcion').textContent = descripcion;
+
+                document.getElementById('popup').classList.add('mostrar');
+            });
+        });
+
+        document.getElementById('cerrar').addEventListener('click', () => {
+            document.getElementById('popup').classList.remove('mostrar');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                document.getElementById('popup').classList.remove('mostrar');
+            }
+        });
+    </script>
+
     <script>
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -179,30 +230,75 @@
     </script>
     <script>
 
-    const fechaFin = new Date("<?php echo $fechaFin; ?>");
+        const fechaFin = new Date("<?php echo $fechaFin; ?>");
 
-    function actualizarContador() {
-        const ahora = new Date();
-        const diferencia = fechaFin - ahora;
+        function actualizarContador() {
+            const ahora = new Date();
+            const diferencia = fechaFin - ahora;
 
-        if (diferencia <= 0) {
-            document.getElementById("contador").textContent = "⏰ ¡El concurso ha terminado!";
-            clearInterval(intervalo);
-            return;
+            if (diferencia <= 0) {
+                document.getElementById("contador").textContent = "⏰ ¡El concurso ha terminado!";
+                clearInterval(intervalo);
+                return;
+            }
+
+            const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+            document.getElementById("contador").textContent =
+                ` ${dias}d ${horas}h ${minutos}m ${segundos}s`;
         }
 
-        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-        const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+        const intervalo = setInterval(actualizarContador, 1000);
+        actualizarContador(); 
+    </script>
 
-        document.getElementById("contador").textContent =
-            ` ${dias}d ${horas}h ${minutos}m ${segundos}s`;
-    }
+    <script>
+        fetch('votos.php')
+        .then(response => response.json())
+        .then(data => {
 
-    const intervalo = setInterval(actualizarContador, 1000);
-    actualizarContador(); 
-</script>
+            const votos = data.map(foto => foto.votos);
+            const labels = data.map(foto => foto.titulo);
+
+            const datosVotos = votos.every(voto => voto === 0) ? [1] : votos; 
+            const labelsVotos = votos.every(voto => voto === 0) ? ["No hay votos"] : labels; 
+
+            const ctx = document.getElementById('graficoVotos').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labelsVotos,
+                    datasets: [{
+                        label: 'Votos',
+                        data: datosVotos,
+                        backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFD700'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw + ' votos';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener los datos:', error);
+        });
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

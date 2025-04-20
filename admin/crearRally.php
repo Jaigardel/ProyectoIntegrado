@@ -23,7 +23,6 @@ if(isset($data["url"]) && isset($data["usuario_id"]) && isset($data["categoria_i
     $titulo = $data["titulo"];
     $descripcion = $data["descripcion"];
 
-    // Insertar el rally en la base de datos
     $sql = "INSERT INTO rallys (usuario_id, categoria_id, fecha_inicio, fecha_fin, titulo, descripcion, url, estado) 
         VALUES (:usuario_id, :categoria_id, :fecha_inicio, :fecha_fin, :titulo, :descripcion, :url, 0)";
 

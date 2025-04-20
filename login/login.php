@@ -3,43 +3,42 @@
     require_once("../utiles/funciones.php");
 
     session_start();
+
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-
-        if(!isset($_POST["email"]) || !isset($_POST["contrasena"])){
+        if(!isset($_POST["email"]) || !isset($_POST["contrasena"]) ||
+            empty($_POST["email"]) || empty($_POST["contrasena"])){
             $error = "Por favor, completa todos los campos.";
-            header("Refresh: 2; url=login.php");
-            exit();
-        }
-        if(empty($_POST["email"]) || empty($_POST["contrasena"])){
-            $error = "Por favor, completa todos los campos.";
-            header("Refresh: 2; url=login.php");
-            exit();
-        }
-        if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)){
+        } elseif(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)){
             $error = "El formato del email no es correcto.";
-            header("Refresh: 2; url=login.php");
-            exit();
-        }
-        $clave = $_POST["contrasena"];
-        $conexion = conectarPDO($host, $user, $password, $bbdd);
-        
-        $sql = "SELECT id, rol_id, contrasena FROM usuarios WHERE email = :email";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':email', $_POST["email"]);
-        $stmt->execute();
-        if($stmt->rowCount() > 0){
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            if(password_verify($clave, $resultado["contrasena"])){
-                $_SESSION["usuarioId"] = $resultado["id"];
-                $_SESSION["rol"] = $resultado["rol_id"];
-                header("Location: ../index.php");
-                exit();
-            }
-        }
-        $error = "Email o contraseña incorrectos.";
-        cerrarPDO();
-    }
+        } else {
+            $clave = $_POST["contrasena"];
+            $conexion = conectarPDO($host, $user, $password, $bbdd);
 
+            $sql = "SELECT id, rol_id, contrasena, estado FROM usuarios WHERE email = :email";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':email', $_POST["email"]);
+            $stmt->execute();
+
+            if($stmt->rowCount() > 0){
+                $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if($resultado["estado"] == 0){
+                    $error = "Tu cuenta está pendiente de validación por un administrador.";
+                } elseif(password_verify($clave, $resultado["contrasena"])){
+                    $_SESSION["usuarioId"] = $resultado["id"];
+                    $_SESSION["rol"] = $resultado["rol_id"];
+                    header("Location: ../index.php");
+                    exit();
+                } else {
+                    $error = "Email o contraseña incorrectos.";
+                }
+            } else {
+                $error = "Email o contraseña incorrectos.";
+            }
+
+            cerrarPDO();
+        }
+    }
 ?>    
 <!DOCTYPE html>
 <html lang="es">
@@ -57,7 +56,9 @@
         <div class="container-fluid">
             <section class="d-flex justify-content-between align-items-center">
                 <img class="logo mb-0" src="../imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
-                <h2 class="mb-0">Rally Fotográfico</h2>
+                <h2 class="mb-0">
+                    <a href="../index.php" class="titulo-link">Rally Fotográfico</a>
+                </h2>
                 <div>.</div>
             </section>
             <nav class="nav justify-content-around mt-3 grid-nav">
@@ -69,36 +70,34 @@
         </div>
     </header>
 
-
     <main class="container-fluid flex-grow-1">
         <div class="row h-100">
             <div class="col-10 my-5 text-center" style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 400px; margin: auto;">
                 <h3>Inicia sesión</h3>
                 <form method="POST" action="" id="loginForm">
-                   
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo Electrónico:</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" required
+                               value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                     </div>
                 
                     <div class="mb-3">
                         <label for="contrasena" class="form-label">Contraseña:</label>
-                        <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                        <input type="password" class="form-control" id="contrasena" name="contrasena" required minlength="6">
+                        <small id="passwordHelp" class="form-text text-muted">La contraseña debe tener al menos 6 caracteres.</small>
                     </div>
                    
                     <button type="submit" class="btn btn-primary">Iniciar sesión</button>
                 </form>
 
                 <?php if (isset($error)): ?>
-                    <p class="text-danger mt-3"><?php echo $error; ?></p>
+                    <p class="text-danger mt-3"><?= htmlspecialchars($error) ?></p>
                 <?php endif; ?>
 
                 <p class="mt-3">¿No tienes una cuenta? <a href="registro.php" style="color:blue">Regístrate aquí</a></p>
             </div>
         </div>
     </main>
-    
-    
 
     <footer class="bg-primary text-white text-center py-3">
         <div class="row d-flex justify-content-between">
@@ -121,9 +120,18 @@
                     </a>
                 </p>
             </div>
-
         </div>
-        
     </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            const password = document.getElementById('contrasena').value;
+            if (password.length < 6) {
+                event.preventDefault();
+                alert("La contraseña debe tener al menos 6 caracteres.");
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+</html>
