@@ -116,7 +116,7 @@
                                         <h3 class="h5"><?= htmlspecialchars($foto["foto_titulo"]) ?></h3>
                                     </div>
                                     <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
-                                        <img src="<?= htmlspecialchars($foto['url']) ?>" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="<?= htmlspecialchars($foto['foto_titulo']) ?>">
+                                        <img loading="lazy" src="<?= htmlspecialchars($foto['url']) ?>" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="<?= htmlspecialchars($foto['foto_titulo']) ?>">
                                     </div>
                                     <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                         <p class="card-text"><?= htmlspecialchars($foto['descripcion']) ?></p>
@@ -160,7 +160,7 @@
                                         <h3 class="h5"><?= htmlspecialchars($foto["foto_titulo"]) ?></h3>
                                     </div>
                                     <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
-                                        <img src="<?= htmlspecialchars($foto['url']) ?>" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="<?= htmlspecialchars($foto['foto_titulo']) ?>">
+                                        <img loading="lazy" src="<?= htmlspecialchars($foto['url']) ?>" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="<?= htmlspecialchars($foto['foto_titulo']) ?>">
                                     </div>
                                     <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                         <p class="card-text"><?= htmlspecialchars($foto['descripcion']) ?></p>

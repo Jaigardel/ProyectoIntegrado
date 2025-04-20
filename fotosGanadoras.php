@@ -86,7 +86,7 @@
                                         <h3 class="h5">'. $registro["rally_titulo"] .'</h3>
                                     </div>
                                     <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
-                                        <img src="'. $registro["enlace"] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $registro["foto_titulo"] .'">
+                                        <img loading="lazy" src="'. $registro["enlace"] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $registro["foto_titulo"] .'">
                                     </div>
                                     <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                         <h5 class="card-title h5">'. $registro["foto_titulo"] .'</h5>

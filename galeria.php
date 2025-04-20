@@ -106,7 +106,7 @@ $fotos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <h3 class="h5">'. $foto["foto_titulo"] .'</h3>
                                     </div>
                                     <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
-                                        <img src="'. $foto["enlace"] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $foto["foto_titulo"] .'">
+                                        <img loading="lazy" src="'. $foto["enlace"] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $foto["foto_titulo"] .'">
                                     </div>
                                     <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                         <p>'. $foto["descripcion"] .'</p>
@@ -159,7 +159,7 @@ $fotos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="popup" id="popup" aria-live="assertive">
         <span class="cerrar" id="cerrar">X</span>
         <h1 class="subsubtitulo text-center h4" id="popupTitulo"></h1>
-        <img id="popupImg" src="" alt="" style="max-width: 100%; height: auto; margin: 0 auto; display: block;">
+        <img id="popupImg" src="" alt="" style="max-width: 50%; height: auto; margin: 0 auto; display: block;">
         <p class="subsubtitulo text-center" id="popupDescripcion"></p>
     </div>
 
