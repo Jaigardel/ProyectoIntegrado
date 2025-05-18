@@ -93,7 +93,7 @@
                             <img src="./imagenes/pinguino.gif" class="img-fluid" alt="Animación">
                         </div>
                     </div>
-                    <div class="col-md-6 order-2 order-md-1" style="font-weight: bold; margin-left: 5%; max-width: 90%;">
+                    <div class="col-md-6 order-2 order-md-1 text-white" style="font-weight: bold; margin-left: 5%; max-width: 90%;">
                         <h2>¡Bienvenidos a nuestra web de fotografía!</h2>
                         <p>
                             Explora nuestra comunidad de fotógrafos y participa en nuestros concursos semanales para ganar premios.
@@ -165,16 +165,16 @@
                 <p>Teléfono: (+34) 123 456 789</p>
 
             </div>
-            <div class="col-sm-4 order-1 order-md-2 text-center">
+            <div class="col-sm-4 order-1 order-md-2 text-center text-white">
                 <h3 class="h5">Links</h3>
                 <p>
-                    <a href="#" target="_blank" class="text-dark mx-2">
+                    <a href="#" target="_blank" class="mx-2" aria-label="Instagram">
                         <i class="bi bi-instagram fs-2"></i>
                     </a>
-                    <a href="#" target="_blank" class="text-dark mx-2">
+                    <a href="#" target="_blank" class="mx-2" aria-label="Facebook">
                         <i class="bi bi-facebook fs-2"></i>
                     </a>
-                    <a href="#" target="_blank" class="text-dark mx-2">
+                    <a href="#" target="_blank" class="mx-2" aria-label="Twitter">
                         <i class="bi bi-twitter fs-2"></i>
                     </a>
                 </p>
