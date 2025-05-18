@@ -117,47 +117,48 @@ if ($hayGaleriaActiva) {
 
             <div class="col-1"></div>
 
-            <div class="col-10 my-5">
+            <div class="col-10 my-5 text-white">
                 <?php if ($hayGaleriaActiva): ?>
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 order-1 order-md-2 text-center my-2">
                             <div class="container my-5">
-                                <h3 class="text-center">📊 Resultados de Votación en el momento de cargar la página</h3>
-                                <canvas id="graficoVotos" style="max-width: 300px;"></canvas>
+                                <h3 class="text-center">📊 Resultados de la votación en el momento de cargar la página</h3>
+                                <canvas id="graficoVotos" style="max-width: 250px;"></canvas>
                             </div>
                         </div>
-                        <div class="col-md-6 order-2 order-md-1" style="font-weight: bold; margin-left: 5%; max-width: 90%;">
+                        <div class="col-md-6 order-2 order-md-1 text-white" style="font-weight: bold; margin-left: 5%; max-width: 90%;">
                             <h2><?php echo $rally["titulo"]?></h2>
                             <p><?php echo $rally["descripcion"]?></p>
                         </div>
                     </div>
                     <?php if (!empty($fotos)): ?>
-            <div class="row">
-                <?php foreach ($fotos as $foto): ?>
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 d-flex flex-column align-items-center text-center">
-                            <div class="card-header">
-                                <h3 class="h5"><?= $foto["titulo"] ?></h3>
-                            </div>
-                            <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
-                                <img loading="lazy" src="<?= $foto["url"] ?>" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="<?= $foto["titulo"] ?>">
-                            </div>
-                            <div class="card-body d-flex flex-column justify-content-between align-items-center">
-                                <p class="card-text"><?= $foto["descripcion"] ?></p>
-                                <?= renderBotonVoto($foto["id"], $conexion) ?>
-                                <br><button class="btn btn-primary ampliar-btn" data-url="<?= $foto["url"] ?>" data-titulo="<?= $foto["titulo"] ?>" data-descripcion="<?= $foto["descripcion"] ?>">Ampliar</button>
+                <hr style="border: 1px solid #ccc;">
+                <h3 class="text-center">📸 Galería de Fotos</h3>        
+                <div class="row">
+                    <?php foreach ($fotos as $foto): ?>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 d-flex flex-column align-items-center text-center">
+                                <div class="card-header">
+                                    <h3 class="h5"><?= $foto["titulo"] ?></h3>
+                                </div>
+                                <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
+                                    <img loading="lazy" src="<?= $foto["url"] ?>" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="<?= $foto["titulo"] ?>">
+                                </div>
+                                <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                                    <p class="card-text"><?= $foto["descripcion"] ?></p>
+                                    <?= renderBotonVoto($foto["id"], $conexion) ?>
+                                    <br><button class="btn btn-primary ampliar-btn" data-url="<?= $foto["url"] ?>" data-titulo="<?= $foto["titulo"] ?>" data-descripcion="<?= $foto["descripcion"] ?>">Ampliar</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php else: ?>
-            <div class="alert alert-info text-center">
-                📸 Aún no hay fotos en esta galería. ¡Sé el primero en subir una!
-            </div>
-        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="alert alert-info text-center">
+                    📸 Aún no hay fotos en esta galería. ¡Sé el primero en subir una!
+                </div>
+            <?php endif; ?>
                 <?php else: ?>
-                    <!-- Mostrar mensaje si no hay galería activa -->
                     <div class="alert alert-warning text-center">
                         ⚠️ No hay galería activa en este momento.
                     </div>

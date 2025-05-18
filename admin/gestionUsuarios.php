@@ -75,9 +75,9 @@
                         <button type="submit" class="btn btn-primary w-100">Crear Administrador</button>
                     </form>
                 </div>
-                <hr class="my-5">  
+                <hr class="my-5 text-white">  
 
-                <h3 class="mb-4 text-center">Gestión de Usuarios</h3>
+                <h3 class="mb-4 text-center text-white">Gestión de Usuarios</h3>
                 <table class="table table-bordered table-hover text-center">
                     <thead class="table-primary">
                         <tr>

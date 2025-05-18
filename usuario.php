@@ -80,7 +80,7 @@
             <div class="col-1"></div>
 
             <div class="col-10 my-5">
-            <div class="row">
+            <div class="row text-white">
                 <div class="text-center">
                     <h2 class="h2">Fotos de la galería activa</h2>
                 </div>
@@ -135,9 +135,9 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
+                <hr class="my-5 text-white">
 
-
-                <div class="row mt-5">
+                <div class="row mt-5 text-white">
                     <div class="text-center">
                         <h2 class="h2">Historial de fotos</h2>
                     </div>
