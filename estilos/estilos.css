@@ -1,6 +1,9 @@
 .invisible{
     display: none;
 }
+header.bg-primary, footer.bg-primary {
+    background-color: #012c59 !important;
+}
 .logo{
     height: 50px;
     width: 50px;
@@ -14,7 +17,7 @@ p a:hover{
     text-decoration: underline;
 }
 body {
-    background: url('../imagenes/fondo.jpg') no-repeat center center fixed;
+    background: url('../imagenes/fondo.png') no-repeat center center fixed;
     background-size: cover;
     display: grid;
     grid-template-rows: auto 1fr auto;

@@ -46,11 +46,10 @@
     </header>
     <main class="container-fluid flex-grow-1">
         <div class="row h-100">
-            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-1"></div>
             <div class="col-10 my-5 text-center" style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 800px; margin: auto;">
                 <h3>Gestión de Rallys</h3>
                 <?php
-                    // Consultar todos los rallys
                     $sqlRallys = "SELECT id, titulo, descripcion, fecha_inicio, fecha_fin, estado FROM rallys ORDER BY fecha_inicio DESC";
                     $stmtRallys = $conexion->prepare($sqlRallys);
                     $stmtRallys->execute();
@@ -89,27 +88,25 @@
                                         }
                                     ?>
                                 </td>
-
-                                <td>
-                               
-                                        <?php
-                                            if ($rally['estado'] == 0): ?>                                              
-                                                <a href="cambiarEstadoRally.php?rally_id=<?php echo $rally['id']; ?>&nuevo_estado=1" class="btn btn-success btn-sm" style="min-width: 100px;">Activar</a>
-                                                <a href="borrarRally.php?rally_id=<?php echo $rally['id']; ?>" class="btn btn-outline-danger btn-sm" style="min-width: 100px;" onclick="return confirm('¿Estás seguro de que deseas borrar este rally? Esta acción no se puede deshacer.');">Borrar</a>
-                                            <?php elseif ($rally['estado'] == 1): ?>              
-                                                <a href="cambiarEstadoRally.php?rally_id=<?php echo $rally['id']; ?>&nuevo_estado=0" class="btn btn-danger btn-sm" style="min-width: 100px;">Desactivar</a>
-                                                <a href="cambiarEstadoRally.php?rally_id=<?php echo $rally['id']; ?>&nuevo_estado=2" class="btn btn-warning btn-sm" style="min-width: 100px;">Finalizar</a>
-                                            <?php else: ?>
-                                                <span class="text-muted">Finalizado</span>
-                                            <?php endif; 
-                                        ?>
+                                <td>                    
+                                    <?php
+                                        if ($rally['estado'] == 0): ?>                                              
+                                            <a href="cambiarEstadoRally.php?rally_id=<?php echo $rally['id']; ?>&nuevo_estado=1" class="btn btn-success btn-sm" style="min-width: 100px;">Activar</a>
+                                            <a href="borrarRally.php?rally_id=<?php echo $rally['id']; ?>" class="btn btn-outline-danger btn-sm" style="min-width: 100px;" onclick="return confirm('¿Estás seguro de que deseas borrar este rally? Esta acción no se puede deshacer.');">Borrar</a>
+                                        <?php elseif ($rally['estado'] == 1): ?>              
+                                            <a href="cambiarEstadoRally.php?rally_id=<?php echo $rally['id']; ?>&nuevo_estado=0" class="btn btn-danger btn-sm" style="min-width: 100px;">Desactivar</a>
+                                            <a href="cambiarEstadoRally.php?rally_id=<?php echo $rally['id']; ?>&nuevo_estado=2" class="btn btn-warning btn-sm" style="min-width: 100px;">Finalizar</a>
+                                        <?php else: ?>
+                                            <span class="text-muted">Finalizado</span>
+                                        <?php endif; 
+                                    ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-1"></div>
         </div>
     </main>
 

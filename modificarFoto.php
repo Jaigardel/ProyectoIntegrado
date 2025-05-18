@@ -109,7 +109,7 @@
     </header>
     <main class="container-fluid flex-grow-1">
         <div class="row h-100">
-            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-1"></div>
             <div class="col-10 my-5 text-center" style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 800px; margin: auto;">
 
                 <h3>Modificar foto</h3>
@@ -136,7 +136,7 @@
                     <?php } ?>
                 </form>
             </div>
-            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-1"></div>
         </div>
     </main>
 

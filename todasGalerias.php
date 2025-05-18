@@ -55,7 +55,7 @@
 
     <main class="container-fluid flex-grow-1">
         <div class="row h-100">
-            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-1"></div>
 
             <div class="col-10 my-5">
                 <div class="row">
@@ -92,7 +92,7 @@
                 </div>
             </div>
     
-            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-1"></div>
         </div>
     </main>
     

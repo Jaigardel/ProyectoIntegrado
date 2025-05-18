@@ -46,7 +46,7 @@
     </header>
     <main class="container-fluid flex-grow-1">
         <div class="row h-100">
-            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-1"></div>
             <div class="col-10 my-5 text-center" style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 800px; margin: auto;">
 
                 <h3>Crear nuevo Rally</h3>
@@ -91,7 +91,7 @@
                 <p id="mensaje" class="mt-3"></p>
                 <img id="imagenPrevia" src="" width="300" class="mt-3" style="display: none; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); position: relative; top: 10px; left: 50%; transform: translateX(-50%);">
             </div>
-            <div class="col-1" style="background-color: aliceblue;"></div>
+            <div class="col-1"></div>
         </div>
     </main>
 
