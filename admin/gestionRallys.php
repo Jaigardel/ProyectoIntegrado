@@ -91,12 +91,7 @@
                                 </td>
 
                                 <td>
-                                    <?php
-                                        $fechaActual = date('Y-m-d');
-                                        $fechaFin = date('Y-m-d', strtotime($rally['fecha_fin']));
-                                        if ($fechaFin >= $fechaActual): 
-                                    ?>
-                                        
+                               
                                         <?php
                                             if ($rally['estado'] == 0): ?>                                              
                                                 <a href="cambiarEstadoRally.php?rally_id=<?php echo $rally['id']; ?>&nuevo_estado=1" class="btn btn-success btn-sm" style="min-width: 100px;">Activar</a>
@@ -106,7 +101,7 @@
                                                 <a href="cambiarEstadoRally.php?rally_id=<?php echo $rally['id']; ?>&nuevo_estado=2" class="btn btn-warning btn-sm" style="min-width: 100px;">Finalizar</a>
                                             <?php else: ?>
                                                 <span class="text-muted">Finalizado</span>
-                                            <?php endif; endif;
+                                            <?php endif; 
                                         ?>
                                 </td>
                             </tr>

@@ -30,7 +30,7 @@
         FROM fotos f
         LEFT JOIN votos v ON f.id = v.foto_id
         JOIN rallys r ON f.rally_id = r.id
-        WHERE f.usuario_id = :usuario_id AND r.estado = 0
+        WHERE f.usuario_id = :usuario_id AND r.estado != 1
         GROUP BY f.id, f.titulo, f.descripcion, f.url, f.estado";
 
     $stmtHistorial = $conexion->prepare($sqlHistorial);

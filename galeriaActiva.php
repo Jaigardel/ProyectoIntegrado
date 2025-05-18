@@ -9,17 +9,24 @@
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
     
-    $sql = "SELECT f.id, f.titulo AS titulo, f.descripcion AS descripcionFoto, f.url AS url, r.titulo AS tema, r.descripcion AS descripcion, r.fecha_fin AS fin, r.id AS rally FROM fotos f JOIN rallys r ON f.rally_id = r.id WHERE r.estado = 1 AND f.estado = 1 ORDER BY f.id DESC";
-    
-    $resultado = resultadoConsulta($conexion, $sql);
-    
-    $foto = $resultado->fetch(PDO::FETCH_ASSOC);
+    // 1. Obtener el rally activo
+$sqlRally = "SELECT * FROM rallys WHERE estado = 1 ORDER BY id DESC LIMIT 1";
+$resultadoRally = resultadoConsulta($conexion, $sqlRally);
+$rally = $resultadoRally->fetch(PDO::FETCH_ASSOC);
 
-    $hayGaleriaActiva = $foto ? true : false;
+$hayGaleriaActiva = $rally ? true : false;
 
-    if ($hayGaleriaActiva) {
-        $fechaFin = $foto["fin"];
-    }
+$fotos = [];
+if ($hayGaleriaActiva) {
+    $fechaFin = $rally["fecha_fin"];
+
+    // 2. Obtener fotos activas del rally activo
+    $sqlFotos = "SELECT * FROM fotos WHERE rally_id = :rally_id AND estado = 1 ORDER BY id DESC";
+    $stmtFotos = $conexion->prepare($sqlFotos);
+    $stmtFotos->execute([':rally_id' => $rally["id"]]);
+    $fotos = $stmtFotos->fetchAll(PDO::FETCH_ASSOC);
+}
+
  
 
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["foto_id"])) {
@@ -92,7 +99,7 @@
                 <a href="galeriaActiva.php" class="nav-link text-white">Galería Activa</a>
                 <a href="todasGalerias.php" class="nav-link text-white">Todas Las Galerías</a>
                 <a href="fotosGanadoras.php" class="nav-link text-white">Fotos Ganadoras</a>
-                <a href="subirFotos.php?rallyId=<?php echo $foto["rally"]?>" class="nav-link text-white">Subir Fotos</a>
+                <a href="subirFotos.php?rallyId=<?php echo $rally["id"]?>" class="nav-link text-white">Subir Fotos</a>
             </nav>
         </div>
     </header>
@@ -115,38 +122,40 @@
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 order-1 order-md-2 text-center my-2">
                             <div class="container my-5">
-                                <h3 class="text-center">📊 Resultados de Votación en Tiempo Real</h3>
+                                <h3 class="text-center">📊 Resultados de Votación en el momento de cargar la página</h3>
                                 <canvas id="graficoVotos" style="max-width: 300px;"></canvas>
                             </div>
                         </div>
                         <div class="col-md-6 order-2 order-md-1" style="font-weight: bold; margin-left: 5%; max-width: 90%;">
-                            <h2><?php echo $foto["tema"]?></h2>
-                            <p><?php echo $foto["descripcion"]?></p>
+                            <h2><?php echo $rally["titulo"]?></h2>
+                            <p><?php echo $rally["descripcion"]?></p>
                         </div>
                     </div>
-                    <div class="row">
-                        <?php
-                            do {
-                                echo '
-                                    <div class="col-md-4 mb-4">
-                                        <div class="card h-100 d-flex flex-column align-items-center text-center">
-                                            <div class="card-header">
-                                                <h3 class="h5">'. $foto["titulo"] .'</h3>
-                                            </div>
-                                            <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
-                                                <img loading="lazy" src="'. $foto['url'] .'" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="'. $foto['titulo'] .'">
-                                            </div>
-                                            <div class="card-body d-flex flex-column justify-content-between align-items-center">
-                                                <p class="card-text">' . $foto['descripcionFoto'] . '</p>
-                                                ' . renderBotonVoto($foto['id'], $conexion) . '
-                                                <br><button class="btn btn-primary ampliar-btn" data-url="' . $foto["url"] . '" data-titulo="' . $foto["titulo"] . '" data-descripcion="' . $foto["descripcionFoto"] . '">Ampliar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ';
-                            } while ($foto = $resultado->fetch(PDO::FETCH_ASSOC));
-                        ?>
+                    <?php if (!empty($fotos)): ?>
+    <div class="row">
+        <?php foreach ($fotos as $foto): ?>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 d-flex flex-column align-items-center text-center">
+                    <div class="card-header">
+                        <h3 class="h5"><?= $foto["titulo"] ?></h3>
                     </div>
+                    <div class="card-img-container" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color:rgb(215, 227, 239);">
+                        <img loading="lazy" src="<?= $foto["url"] ?>" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="<?= $foto["titulo"] ?>">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                        <p class="card-text"><?= $foto["descripcion"] ?></p>
+                        <?= renderBotonVoto($foto["id"], $conexion) ?>
+                        <br><button class="btn btn-primary ampliar-btn" data-url="<?= $foto["url"] ?>" data-titulo="<?= $foto["titulo"] ?>" data-descripcion="<?= $foto["descripcion"] ?>">Ampliar</button>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php else: ?>
+    <div class="alert alert-info text-center">
+        📸 Aún no hay fotos en esta galería. ¡Sé el primero en subir una!
+    </div>
+<?php endif; ?>
                 <?php else: ?>
                     <!-- Mostrar mensaje si no hay galería activa -->
                     <div class="alert alert-warning text-center">

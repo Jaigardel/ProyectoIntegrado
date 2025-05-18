@@ -4,11 +4,11 @@
     if (!isset($_SESSION["rol"])) {
         $_SESSION["rol"] = 0;
     }
-
+    
     require_once("utiles/variables.php");
     require_once("utiles/funciones.php");
-
-    $conexion = conectarPDO($host, $user, $password, $bbdd);
+    try{
+        $conexion = conectarPDO($host, $user, $password, $bbdd);
     
     $sql = "SELECT titulo, r.url AS url FROM rallys r WHERE estado = 1";
     
@@ -38,6 +38,10 @@
     $registro2 = $resultado->fetch(PDO::FETCH_ASSOC);
     
     cerrarPDO();
+    }catch(PDOException $e){
+        echo "Error: " . $e->getMessage();
+    }
+    
 ?>    
 <!DOCTYPE html>
 <html lang="es">
