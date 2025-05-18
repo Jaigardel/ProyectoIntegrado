@@ -83,7 +83,13 @@ body > * {
 .boton-sticky:hover {
     background-color: #0056b3;
 }
-
+#botonSubir.sticky {
+        position: fixed !important;
+        top: 10px !important;
+        right: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: top 0.3s ease;
+    }
 .popup {
     position: fixed;
     top: 50%;

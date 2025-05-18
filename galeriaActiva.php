@@ -99,7 +99,6 @@ if ($hayGaleriaActiva) {
                 <a href="galeriaActiva.php" class="nav-link text-white">Galería Activa</a>
                 <a href="todasGalerias.php" class="nav-link text-white">Todas Las Galerías</a>
                 <a href="fotosGanadoras.php" class="nav-link text-white">Fotos Ganadoras</a>
-                <a href="subirFotos.php?rallyId=<?php echo $rally["id"]?>" class="nav-link text-white">Subir Fotos</a>
             </nav>
         </div>
     </header>
@@ -118,6 +117,14 @@ if ($hayGaleriaActiva) {
             <div class="col-1"></div>
 
             <div class="col-10 my-5 text-white">
+                <?php if ($hayGaleriaActiva): ?>
+                    <a href="subirFotos.php?rallyId=<?= $rally["id"] ?>" 
+                    id="botonSubir" 
+                    class="btn btn-warning"
+                    style="position: absolute;  right: 20px; z-index: 1050;">
+                        📤 Subir Foto
+                    </a>
+                <?php endif; ?>
                 <?php if ($hayGaleriaActiva): ?>
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 order-1 order-md-2 text-center my-2">
@@ -309,6 +316,20 @@ if ($hayGaleriaActiva) {
         });
 
     </script>
+    <script>
+    window.addEventListener("scroll", function () {
+        const boton = document.getElementById("botonSubir");
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        // Activa sticky al llegar a 250px de scroll vertical
+        if (scrollY >= 250) {
+            boton.classList.add("sticky");
+        } else {
+            boton.classList.remove("sticky");
+        }
+    });
+</script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
