@@ -9,18 +9,15 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom right, #0d47a1, #1976d2);
+            background: linear-gradient(to bottom right, #1e3c72, #2a5298); /* nuevo fondo */
             color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            overflow-x: hidden;
         }
 
         header {
             text-align: center;
             padding: 4rem 2rem;
             background-color: rgba(0, 0, 50, 0.2);
-            width: 100%;
         }
 
         header h1 {
@@ -38,7 +35,7 @@
             display: inline-block;
             margin-top: 2rem;
             padding: 0.8rem 1.5rem;
-            background-color: #64b5f6;
+            background-color: #90caf9;
             color: #003366;
             text-decoration: none;
             font-weight: bold;
@@ -47,14 +44,13 @@
         }
 
         .cta-button:hover {
-            background-color: #42a5f5;
+            background-color: #64b5f6;
         }
 
         section {
             padding: 3rem 2rem;
             text-align: center;
-            background-color: #0d47a1;
-            width: 100%;
+            background-color: #1e3c72;
         }
 
         section h2 {
@@ -70,56 +66,62 @@
         }
 
         .feature {
-            background-color: #1565c0;
+            background-color: #3f51b5;
             padding: 1.5rem;
             border-radius: 8px;
             max-width: 300px;
-            align-self: center;
         }
 
         .etapas {
+            max-width: 1000px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             gap: 2rem;
             margin-top: 2rem;
-            width: 100%;
-            padding: 0 1rem;
-            transition: all 0.3s ease-in-out;
+            align-items: center; 
         }
 
         .etapa {
-            background-color: #1565c0;
+            width: 100%;
+            max-width: 800px;
+            background-color: #3f51b5;
             padding: 1.5rem;
             border-radius: 8px;
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+            text-align: center;
+            box-sizing: border-box;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        .toggle-button {
-            background-color: #64b5f6;
-            color: #003366;
-            padding: 0.8rem 1.5rem;
+        .etapa img {
+            max-width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            margin-bottom: 1rem;
             border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 2rem 0;
-            display: inline-block;
+        }
+
+        @media (max-width: 900px) {
+            .etapa {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .etapa {
+                max-width: 95%;
+            }
         }
 
         footer {
             text-align: center;
             padding: 2rem;
-            background-color: #0b3c91;
+            background-color: #1a237e;
             font-size: 0.9rem;
-            width: 100%;
         }
     </style>
 </head>
@@ -131,8 +133,10 @@
             <h1>Rally Fotográfico</h1>
             <p>
                 Este repositorio forma parte de un proyecto de fin de grado centrado en el desarrollo de una plataforma
-                web para la participación fotográfica. La aplicación permite a los usuarios subir imágenes como parte de un rally fotográfico y ofrece un
-                sistema de votación pública para valorar las contribuciones. Aquí se documentan los recursos técnicos, código fuente y herramientas utilizadas
+                web para la participación fotográfica.
+                La aplicación permite a los usuarios subir imágenes como parte de un rally fotográfico y ofrece un
+                sistema de votación pública para valorar las
+                contribuciones. Aquí se documentan los recursos técnicos, código fuente y herramientas utilizadas
                 durante su desarrollo.
             </p>
         </section>
@@ -140,31 +144,34 @@
 
     <section>
         <h2>Etapas del Desarrollo</h2>
-        <!-- Botón de alternancia -->
-        <button id="toggleButton" class="toggle-button">Mostrar/Ocultar Etapas</button>
-
-        <div id="etapasContainer" class="etapas">
+        <div class="etapas">
             <div class="etapa">
+                <img src="imagenes/" alt="Análisis y diseño">
                 <h3>1. Análisis y diseño</h3>
                 <p>Definición de requisitos, estructura de base de datos y arquitectura general del sistema.</p>
             </div>
             <div class="etapa">
+                <img src="imagenes/" alt="Desarrollo de interfaz">
                 <h3>2. Desarrollo de interfaz</h3>
                 <p>Diseño del frontend con HTML, CSS y Bootstrap para una experiencia clara y accesible.</p>
             </div>
             <div class="etapa">
+                <img src="imagenes/" alt="Programación backend">
                 <h3>3. Programación backend</h3>
                 <p>Implementación de lógica de negocio con PHP y conexión a MySQL mediante PDO.</p>
             </div>
             <div class="etapa">
+                <img src="imagenes/" alt="Gestión de roles">
                 <h3>4. Gestión de roles y autenticación</h3>
                 <p>Sistema de login y control de accesos según tipo de usuario (invitado, registrado, admin).</p>
             </div>
             <div class="etapa">
+                <img src="imagenes/" alt="Subida de imágenes">
                 <h3>5. Subida y almacenamiento de imágenes</h3>
                 <p>Integración con Supabase para el almacenamiento externo de fotos y metadatos.</p>
             </div>
             <div class="etapa">
+                <img src="imagenes/" alt="Pruebas y despliegue">
                 <h3>6. Pruebas y despliegue</h3>
                 <p>Verificación de funcionalidades, corrección de errores y publicación en servidor externo.</p>
             </div>
@@ -177,13 +184,12 @@
             <div class="feature">
                 <h1>Enlace al repositorio</h1>
                 <p>Explora nuestro repositorio de herramientas, scripts y recursos para fotografía digital.</p>
-                <a href="https://github.com/Jaigardel/ProyectoIntegrado" target="_blank" class="cta-button">Ver en
-                    GitHub</a>
+                <a href="https://github.com/Jaigardel/ProyectoIntegrado" target="_blank" class="cta-button">Ver en GitHub</a>
             </div>
             <div class="feature">
                 <h2>Enlace a la aplicación web desplegada</h2>
-                <p>Puedes consultar o descargar la guía técnica completa en PDF.</p>
-                <a href="https://jaigardel.byethost18.com/" target="_blank" download class="cta-button">Ir a la web</a>
+                <p>Consulta la aplicación en funcionamiento con todas sus funcionalidades.</p>
+                <a href="https://jaigardel.byethost18.com/" target="_blank" class="cta-button">Ir a la web</a>
             </div>
             <div class="feature">
                 <h2>Documentación del Proyecto</h2>
@@ -196,15 +202,6 @@
     <footer>
         &copy; 2025 Rally Fotográfico | Hecho por Jaime García de la Concha del Cerro
     </footer>
-
-    <script>
-        const toggleButton = document.getElementById('toggleButton');
-        const etapasContainer = document.getElementById('etapasContainer');
-
-        toggleButton.addEventListener('click', function() {
-            etapasContainer.classList.toggle('hidden');
-        });
-    </script>
 
 </body>
 
