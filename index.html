@@ -11,12 +11,16 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(to bottom right, #0d47a1, #1976d2);
             color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header {
             text-align: center;
             padding: 4rem 2rem;
             background-color: rgba(0, 0, 50, 0.2);
+            width: 100%;
         }
 
         header h1 {
@@ -50,6 +54,7 @@
             padding: 3rem 2rem;
             text-align: center;
             background-color: #0d47a1;
+            width: 100%;
         }
 
         section h2 {
@@ -69,6 +74,44 @@
             padding: 1.5rem;
             border-radius: 8px;
             max-width: 300px;
+            align-self: center;
+        }
+
+        .etapas {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            width: 100%;
+            padding: 0 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .etapa {
+            background-color: #1565c0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .toggle-button {
+            background-color: #64b5f6;
+            color: #003366;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 2rem 0;
+            display: inline-block;
         }
 
         footer {
@@ -76,6 +119,7 @@
             padding: 2rem;
             background-color: #0b3c91;
             font-size: 0.9rem;
+            width: 100%;
         }
     </style>
 </head>
@@ -83,15 +127,49 @@
 <body>
 
     <header>
+        <section>
+            <h1>Rally Fotográfico</h1>
+            <p>
+                Este repositorio forma parte de un proyecto de fin de grado centrado en el desarrollo de una plataforma
+                web para la participación fotográfica. La aplicación permite a los usuarios subir imágenes como parte de un rally fotográfico y ofrece un
+                sistema de votación pública para valorar las contribuciones. Aquí se documentan los recursos técnicos, código fuente y herramientas utilizadas
+                durante su desarrollo.
+            </p>
+        </section>
+    </header>
+
     <section>
-        <h1>Rally Fotográfico</h1>
-        <p>
-            Este repositorio forma parte de un proyecto de fin de grado centrado en el desarrollo de una plataforma web para la participación fotográfica. 
-            La aplicación permite a los usuarios subir imágenes como parte de un rally fotográfico y ofrece un sistema de votación pública para valorar las 
-            contribuciones. Aquí se documentan los recursos técnicos, código fuente y herramientas utilizadas durante su desarrollo.
-        </p>
+        <h2>Etapas del Desarrollo</h2>
+        <!-- Botón de alternancia -->
+        <button id="toggleButton" class="toggle-button">Mostrar/Ocultar Etapas</button>
+
+        <div id="etapasContainer" class="etapas">
+            <div class="etapa">
+                <h3>1. Análisis y diseño</h3>
+                <p>Definición de requisitos, estructura de base de datos y arquitectura general del sistema.</p>
+            </div>
+            <div class="etapa">
+                <h3>2. Desarrollo de interfaz</h3>
+                <p>Diseño del frontend con HTML, CSS y Bootstrap para una experiencia clara y accesible.</p>
+            </div>
+            <div class="etapa">
+                <h3>3. Programación backend</h3>
+                <p>Implementación de lógica de negocio con PHP y conexión a MySQL mediante PDO.</p>
+            </div>
+            <div class="etapa">
+                <h3>4. Gestión de roles y autenticación</h3>
+                <p>Sistema de login y control de accesos según tipo de usuario (invitado, registrado, admin).</p>
+            </div>
+            <div class="etapa">
+                <h3>5. Subida y almacenamiento de imágenes</h3>
+                <p>Integración con Supabase para el almacenamiento externo de fotos y metadatos.</p>
+            </div>
+            <div class="etapa">
+                <h3>6. Pruebas y despliegue</h3>
+                <p>Verificación de funcionalidades, corrección de errores y publicación en servidor externo.</p>
+            </div>
+        </div>
     </section>
-</header>
 
     <section>
         <h2>¿Qué encontrarás?</h2>
@@ -105,7 +183,7 @@
             <div class="feature">
                 <h2>Enlace a la aplicación web desplegada</h2>
                 <p>Puedes consultar o descargar la guía técnica completa en PDF.</p>
-                <a href="docs/mi-documentacion.pdf" download class="cta-button">Descargar PDF</a>
+                <a href="https://jaigardel.byethost18.com/" target="_blank" download class="cta-button">Ir a la web</a>
             </div>
             <div class="feature">
                 <h2>Documentación del Proyecto</h2>
@@ -116,8 +194,17 @@
     </section>
 
     <footer>
-        &copy; 2025 Rally Fotográfico | Hecho por Jaime Gracía de la Concha del Cerro
+        &copy; 2025 Rally Fotográfico | Hecho por Jaime García de la Concha del Cerro
     </footer>
+
+    <script>
+        const toggleButton = document.getElementById('toggleButton');
+        const etapasContainer = document.getElementById('etapasContainer');
+
+        toggleButton.addEventListener('click', function() {
+            etapasContainer.classList.toggle('hidden');
+        });
+    </script>
 
 </body>
 
