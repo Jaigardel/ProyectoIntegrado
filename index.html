@@ -9,7 +9,7 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom right, #1e3c72, #2a5298); /* nuevo fondo */
+            background: linear-gradient(to bottom right, #1e3c72, #2a5298);
             color: white;
             overflow-x: hidden;
         }
@@ -79,7 +79,7 @@
             flex-direction: column;
             gap: 2rem;
             margin-top: 2rem;
-            align-items: center; 
+            align-items: center;
         }
 
         .etapa {
@@ -99,7 +99,7 @@
 
         .etapa img {
             max-width: 100%;
-            max-height: 150px;
+            max-height: 600px;
             object-fit: cover;
             margin-bottom: 1rem;
             border-radius: 6px;
@@ -117,6 +117,24 @@
             }
         }
 
+        #toggle-etapas {
+            position: sticky;
+            top: 50px;
+            z-index: 1000;
+            background-color: #90caf9;
+            padding: 0.8rem 1.5rem;
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #003366;
+            transition: background-color 0.3s;
+        }
+        #toggle-etapas:hover {
+            background-color: #64b5f6;
+        }
         footer {
             text-align: center;
             padding: 2rem;
@@ -144,36 +162,56 @@
 
     <section>
         <h2>Etapas del Desarrollo</h2>
-        <div class="etapas">
+        <button id="toggle-etapas">Ocultar etapas</button>
+        <div class="etapas" id="etapas-container">
             <div class="etapa">
-                <img src="imagenes/" alt="Análisis y diseño">
+                <img src="imagenes/analisis.jpg" alt="Análisis y diseño">
                 <h3>1. Análisis y diseño</h3>
-                <p>Definición de requisitos, estructura de base de datos y arquitectura general del sistema.</p>
+                <p>En esta etapa repase en detalle los requisitos mínimos que se propusieron.</p>
+                <p>Desde un principio pensé en usar PHP como tecnología para el backend pues tenía un proyecto parecido al propuesto.</p>
+                <p>Exploré distintas opciones y tecnologías y me decante por una web sencilla en HTML, CSS y JS vanilla.</p>
+                <p>Decidí alamacenar las fotos en SupaBase para mantener la base de datos más ligera.</p>
+
             </div>
             <div class="etapa">
-                <img src="imagenes/" alt="Desarrollo de interfaz">
+                <img src="imagenes/diseño.jpg" alt="Desarrollo de interfaz">
                 <h3>2. Desarrollo de interfaz</h3>
-                <p>Diseño del frontend con HTML, CSS y Bootstrap para una experiencia clara y accesible.</p>
+                <p>Todo el diseño del frontend está hecho con HTML, CSS y Bootstrap para una experiencia clara y responsive.</p>
+                <p>La carga de imágenes se hace a través de la URL almacenada en la base de datos.</p>
+                <p>El diseño es sencillo y funcional, pensado en no tener que hacer muchos clics para llegar al contenido relevante.</p>
             </div>
             <div class="etapa">
-                <img src="imagenes/" alt="Programación backend">
+                <img src="imagenes/backend.jpg" alt="Programación backend">
                 <h3>3. Programación backend</h3>
-                <p>Implementación de lógica de negocio con PHP y conexión a MySQL mediante PDO.</p>
+                <p>Lo primero fue crear la base de datos que existía en una máquina virtual (desarrollo).</p>
+                <p>Después se creó la base de datos en Supabase y se conectó a la aplicación (JS).</p>
+                <p>Se creó un sistema de autenticación y gestión de usuarios para el registro y login.</p>
+                <p>Se implementó un sistema de votación, gestión de imágenes y gestión de rallys.</p>
+
             </div>
             <div class="etapa">
-                <img src="imagenes/" alt="Gestión de roles">
+                <img src="imagenes/roles.jpg" alt="Gestión de roles">
                 <h3>4. Gestión de roles y autenticación</h3>
                 <p>Sistema de login y control de accesos según tipo de usuario (invitado, registrado, admin).</p>
+                <p>Los usuarios pueden registrarse y acceder a su perfil, donde pueden ver y subir sus imágenes.</p>
+                <p>Los administradores pueden gestionar los rallys, las imágenes y los usuarios.</p>
+                <p>Los invitados pueden ver las imágenes y votar, pero no pueden subir imágenes ni crear rallys.</p>
+
             </div>
             <div class="etapa">
-                <img src="imagenes/" alt="Subida de imágenes">
+                <img src="imagenes/subida.jpg" alt="Subida de imágenes">
                 <h3>5. Subida y almacenamiento de imágenes</h3>
-                <p>Integración con Supabase para el almacenamiento externo de fotos y metadatos.</p>
+                <p>Integración con Supabase para el almacenamiento externo de fotos.</p>
+                <p>Supabase proporciona código JS para poder gestionar la subida de recursos</p>
+                <p>Las URL de las imágenes se almacenan en la base de datos a la vez que se suben estas.</p>
             </div>
             <div class="etapa">
-                <img src="imagenes/" alt="Pruebas y despliegue">
+                <img src="imagenes/despliegue.jpg" alt="Pruebas y despliegue">
                 <h3>6. Pruebas y despliegue</h3>
-                <p>Verificación de funcionalidades, corrección de errores y publicación en servidor externo.</p>
+                <p>Para poder presentar el proyecto decidí subirlo a un hosting gratuito (Byet).</p>
+                <p>El despliegue se realizó en el servidor de Byet, donde se subieron todos los archivos y se configuró la base de datos.</p>
+                <p>Se realizaron pruebas de carga y rendimiento para asegurar que la aplicación funcionara correctamente.</p>
+
             </div>
         </div>
     </section>
@@ -184,7 +222,8 @@
             <div class="feature">
                 <h1>Enlace al repositorio</h1>
                 <p>Explora nuestro repositorio de herramientas, scripts y recursos para fotografía digital.</p>
-                <a href="https://github.com/Jaigardel/ProyectoIntegrado" target="_blank" class="cta-button">Ver en GitHub</a>
+                <a href="https://github.com/Jaigardel/ProyectoIntegrado" target="_blank" class="cta-button">Ver en
+                    GitHub</a>
             </div>
             <div class="feature">
                 <h2>Enlace a la aplicación web desplegada</h2>
@@ -202,6 +241,23 @@
     <footer>
         &copy; 2025 Rally Fotográfico | Hecho por Jaime García de la Concha del Cerro
     </footer>
+
+
+    <script>
+    const toggleButton = document.getElementById('toggle-etapas');
+    const etapasContainer = document.getElementById('etapas-container');
+
+    toggleButton.addEventListener('click', () => {
+        if (etapasContainer.style.display === 'none') {
+            etapasContainer.style.display = 'flex';
+            toggleButton.textContent = 'Ocultar etapas';
+        } else {
+            etapasContainer.style.display = 'none';
+            toggleButton.textContent = 'Mostrar etapas';
+        }
+    });
+</script>
+
 
 </body>
 
