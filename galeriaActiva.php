@@ -78,28 +78,58 @@ if ($hayGaleriaActiva) {
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header class="bg-primary text-white py-3">
-        <div class="container-fluid">
-            <section class="d-flex justify-content-between align-items-center">
-                <img class="logo mb-0" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
-                <h2 class="mb-0">
-                    <a href="index.php" class="titulo-link">Rally Fotográfico</a>
-                </h2>
-                <?php if ($_SESSION["rol"] == 1) { ?>
-                    <p class="mb-0"><a href="admin.php">Panel de Control</a>, <a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
-                <?php } else if($_SESSION["rol"] == 2) { ?>
-                    <p class="mb-0"><a href="usuario.php">Ver mis Fotos</a> o <a href="./login/cerrarSesion.php">Cerrar Sesion</a></p>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="index.php">
+            <img class="logo me-2" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
+            <span class="titulo-link">Rally Fotográfico</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="index.php">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="galeriaActiva.php">Galería Activa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="todasGalerias.php">Todas Las Galerías</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="fotosGanadoras.php">Fotos Ganadoras</a>
+                </li>
+            </ul>
 
-                <?php } else{ ?>
-                        <p class="mb-0"><a href="login/login.php">Identifícate</a> o <a href="login/registro.php">Crea una cuenta</a></p>
-                <?php }?>
-                
-            </section>
-            <nav class="nav justify-content-around mt-3 grid-nav">
-                <a href="index.php" class="nav-link text-white">Inicio</a>
-                <a href="galeriaActiva.php" class="nav-link text-white">Galería Activa</a>
-                <a href="todasGalerias.php" class="nav-link text-white">Todas Las Galerías</a>
-                <a href="fotosGanadoras.php" class="nav-link text-white">Fotos Ganadoras</a>
-            </nav>
+            <ul class="navbar-nav text-center">
+                <?php if ($_SESSION["rol"] == 1){ ?>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="admin.php">Panel de Control</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a>
+                    </li>
+                <?php }elseif ($_SESSION["rol"] == 2){ ?>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a>
+                    </li>
+                    <li class="nav-item">
+                <?php }else{?>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="login/login.php">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="login/registro.php">Registrarse</a>
+                    </li>
+                <?php } ?>
+
         </div>
     </header>
 
