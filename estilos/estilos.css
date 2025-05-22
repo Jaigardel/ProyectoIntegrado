@@ -45,7 +45,7 @@ body::before {
     height: 100vh;
     background: rgba(0, 0, 0, 0.4);
     z-index: 0;
-    pointer-events: none; /
+    pointer-events: none; 
 }
 body > * {
     position: relative;
@@ -145,7 +145,7 @@ body > * {
   transform: translateX(-50%);
 }
 
-/* Espaciado en pantallas pequeñas */
+
 @media (max-width: 991.98px) {
   .titulo-navbar {
     position: static;
@@ -169,16 +169,20 @@ body > * {
         padding: 0;
         width: 95%;
     }
+    .pb-500 {
+        padding-bottom: 500px !important;
+    }
 }
 .menu-container {
-    min-height: auto; /* o elimínalo para que tome el tamaño natural */
+    min-height: auto; 
     display: flex;
-    align-items: flex-start; /* para que no se centre verticalmente */
+    align-items: flex-start; 
     justify-content: center;
     flex-wrap: wrap;
-    padding: 2rem 0; /* un poco de espacio arriba y abajo */
+    padding: 2rem 0; 
 }
 
 body {
     overflow-x: hidden;
 }
+

@@ -95,7 +95,7 @@
     </header>
 
 
-    <main class="container-fluid flex-grow-1">
+    <main class="container-fluid flex-grow-1 pb-500">
         <div class="row">
             <div class="col-1"></div>
 
