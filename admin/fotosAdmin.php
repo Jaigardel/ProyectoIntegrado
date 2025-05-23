@@ -103,6 +103,8 @@
                         <a class="nav-link text-white" href="../usuario.php">Ver mis Fotos</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-white" href="../login/cerrarSesion.php">Cerrar Sesión</a>
+                    </li>
                 <?php }else{?>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="../login/login.php">Iniciar Sesión</a>

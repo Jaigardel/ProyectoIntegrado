@@ -69,18 +69,45 @@
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
             <ul class="navbar-nav text-center">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="index.php">Inicio</a>
+                    <a class="nav-link text-white" href="../index.php">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="galeriaActiva.php">Galería Activa</a>
+                    <a class="nav-link text-white" href="../galeriaActiva.php">Galería Activa</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="todasGalerias.php">Todas Las Galerías</a>
+                    <a class="nav-link text-white" href="../todasGalerias.php">Todas Las Galerías</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="fotosGanadoras.php">Fotos Ganadoras</a>
+                    <a class="nav-link text-white" href="../fotosGanadoras.php">Fotos Ganadoras</a>
                 </li>
             </ul>
+
+            <ul class="navbar-nav text-center">
+                <?php if ($_SESSION["rol"] == 1){ ?>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="../admin.php">Panel de Control</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="../usuario.php">Ver mis Fotos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="cerrarSesion.php">Cerrar Sesión</a>
+                    </li>
+                <?php }elseif ($_SESSION["rol"] == 2){ ?>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="../usuario.php">Ver mis Fotos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="cerrarSesion.php">Cerrar Sesión</a>
+                    </li>
+                <?php }else{?>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="../login/login.php">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="../login/registro.php">Registrarse</a>
+                    </li>
+                <?php } ?>
 
         </div>
     </header>
