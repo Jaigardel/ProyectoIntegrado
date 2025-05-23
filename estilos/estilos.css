@@ -98,7 +98,7 @@ body > * {
 }
 #botonSubir.sticky {
         position: fixed !important;
-        top: 10px !important;
+        top: 30px !important;
         right: 20px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         transition: top 0.3s ease;
