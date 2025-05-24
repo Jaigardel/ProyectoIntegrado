@@ -186,7 +186,7 @@ if ($_SERVER["REQUEST_METHOD"]=="POST") {
                 <button type="submit" class="btn btn-primary w-100">Enviar enlace</button>
             </form>
 
-            <p class="mt-3"><a href="login.php" class="btn btn-primary w-100">Volver al Login</a></p>
+            <a href="login.php" class="m-3 btn btn-primary w-100">Volver al Login</a>
         </div>
     </div>
 </main>
@@ -225,5 +225,6 @@ if ($_SERVER["REQUEST_METHOD"]=="POST") {
     }, 3000); 
 </script>
 <?php }; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

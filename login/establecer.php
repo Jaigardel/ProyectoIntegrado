@@ -140,25 +140,30 @@ if($email == "" || $token == ""){
             <?= $_SESSION["mensajeResultado"] ?>
         </div>
     <?php }; ?>
-    <form action="establecer.php" method="post">
-        <p>
-            Nueva Contraseña: <input type="text" name="clave1" placeholder="Contraseña"> 
-        </p>
-        <?php if($_SESSION["errorClave"]){?>
-                <p class="error">La clave no tiene entre 4 y 8 caracteres o no coincide</p>
-            <?php }?>
-        <p>
-            Repita Contraseña: <input type="text" name="clave2" placeholder="Contraseña"> 
-        </p>
-        <?php if($_SESSION["errorClave"]){?>
-                <p class="error">La clave no tiene entre 4 y 8 caracteres o no coincide</p>
-            <?php }?> 
-        <p>
-            <input type="submit" value="Establecer"> 
-        </p>
-        <p><input type="hidden" name="email" value="<?php echo $email?>"><input type="hidden" name="token" value="<?php echo $token?>"></p>
-    </form>
-    <p><a href="login.php" class="btn btn-primary w-100">Volver al Login</a></p>
+            <form method="POST" action="establecer.php" id="establecerForm">
+            <div class="m-3 text-center">
+                <label for="clave1" class="form-label">Nueva Contraseña:</label>
+                <input type="password" class="form-control" id="clave1" name="clave1" required>
+            </div>
+
+            <div class="m-3 text-center">
+                <label for="clave2" class="form-label">Repetir Contraseña:</label>
+                <input type="password" class="form-control" id="clave2" name="clave2" required>
+            </div>
+
+            <?php if (!empty($_SESSION["errorClave"])): ?>
+                <p class="text-danger text-center">La clave no tiene al menos 6 caracteres o no coincide</p>
+            <?php endif; ?>
+
+            <input type="hidden" name="email" value="<?= htmlspecialchars($email ?? '') ?>">
+            <input type="hidden" name="token" value="<?= htmlspecialchars($token ?? '') ?>">
+
+            <div class="m-3 text-center">
+                <button type="submit" class="btn btn-primary w-100">Establecer Contraseña</button>
+            </div>
+        </form>
+
+    <a href="login.php" class="m-3 btn btn-primary w-100">Volver al Login</a>
             </div>
     </main>
     <footer class="bg-primary text-white text-center py-3">
@@ -195,6 +200,7 @@ if($email == "" || $token == ""){
     }, 3000); 
 </script>
 <?php }; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 <?php }?>

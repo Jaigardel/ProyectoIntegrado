@@ -195,12 +195,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             <button type="submit" class="btn btn-primary">Registrarse</button>
                         </div>
                     </form>
-                    <?php if (isset($error)): ?>
-                        <p class="text-danger mt-3"><?php echo $error; ?></p>
-                    <?php endif; ?>
-                    <?php if (isset($exito)): ?>
-                        <p class="text-success mt-3"><?php echo $exito; ?></p>
-                    <?php endif; ?>
+                    <?php if (!empty($_SESSION["mensajeResultado"])){ ?>
+                        <div id="mensaje" class="text-center my-3 fw-bold"
+                            style="color: <?= $_SESSION['estadoResultado'] === 'exito' ? 'green' : 'red' ?>">
+                            <?= $_SESSION["mensajeResultado"] ?>
+                        </div>
+                    <?php }; ?>
                     <p class="mt-3">¿Ya tienes una cuenta? <a href="login.php" style="color:blue">Inicia sesión aquí</a></p>
                 </div>    
             </div>

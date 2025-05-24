@@ -115,8 +115,9 @@ if(isset($_GET['email']) && isset($_GET['token'])){
             <div class="col-10 my-5 text-center" style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 400px; margin: auto;">
     <h1>Activar Cuenta</h1>
     <p><?php echo htmlspecialchars($mensaje); ?></p>
-    <p><a href="login.php" class="btn btn-primary w-100">Ir a Login</a></p>
+    <a href="login.php" class="m-3 btn btn-primary w-100">Volver al Login</a>
             </div>
             </main>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
