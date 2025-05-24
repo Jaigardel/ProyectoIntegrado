@@ -163,7 +163,7 @@ if($email == "" || $token == ""){
             </div>
         </form>
 
-    <a href="login.php" class="m-3 btn btn-primary w-100">Volver al Login</a>
+    <p><a href="login.php" class="mt-3 btn btn-primary w-100">Volver al Login</a></p>
             </div>
     </main>
     <footer class="bg-primary text-white text-center py-3">

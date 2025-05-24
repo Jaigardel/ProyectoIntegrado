@@ -186,7 +186,7 @@ if ($_SERVER["REQUEST_METHOD"]=="POST") {
                 <button type="submit" class="btn btn-primary w-100">Enviar enlace</button>
             </form>
 
-            <a href="login.php" class="m-3 btn btn-primary w-100">Volver al Login</a>
+            <p><a href="login.php" class="mt-3 btn btn-primary w-100">Volver al Login</a></p>
         </div>
     </div>
 </main>
