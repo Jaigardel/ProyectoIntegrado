@@ -140,7 +140,7 @@
                                 </td>
                                 <td>
                                     <a href="cambiarEstadoUsuario.php?usuario_id=<?= $usuario['id'] ?>&nuevo_estado=<?= $usuario['estado'] ? 0 : 1 ?>" 
-                                    class="btn btn-sm btn-<?= $usuario['estado'] ? 'danger' : 'success' ?>">
+                                    class="btn btn-sm btn-<?= $usuario['estado'] ? 'danger' : 'success' ?> boton-accion">
                                         <?= $usuario['estado'] ? 'Inactivar' : 'Activar' ?>
                                     </a>
                                 </td>
