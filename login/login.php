@@ -23,7 +23,7 @@
                 $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if($resultado["estado"] == 0){
-                    $error = "Tu cuenta está pendiente de validación por un administrador.";
+                    $error = "Tu cuenta está inactivada, comprueba tu correo o contacta con un administrador.";
                 } elseif(password_verify($clave, $resultado["contrasena"])){
                     $_SESSION["usuarioId"] = $resultado["id"];
                     $_SESSION["rol"] = $resultado["rol_id"];

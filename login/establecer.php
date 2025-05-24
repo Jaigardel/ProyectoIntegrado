@@ -158,7 +158,7 @@ if($email == "" || $token == ""){
         </p>
         <p><input type="hidden" name="email" value="<?php echo $email?>"><input type="hidden" name="token" value="<?php echo $token?>"></p>
     </form>
-    <p><a href="login.php">Volver al Login</a></p>
+    <p><a href="login.php" class="btn btn-primary w-100">Volver al Login</a></p>
             </div>
     </main>
     <footer class="bg-primary text-white text-center py-3">
