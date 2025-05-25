@@ -1,40 +1,40 @@
-<?php 
-    session_start();
+<?php
+session_start();
 
-    if (!isset($_SESSION["rol"])) {
-        $_SESSION["rol"] = 0;
-    }
+if (!isset($_SESSION["rol"])) {
+    $_SESSION["rol"] = 0;
+}
 
-    if (!isset($_SESSION["usuarioId"])) {
-        $_SESSION["usuarioId"] = 0;
-    }
-    
-    require_once("utiles/variables.php");
-    require_once("utiles/funciones.php");
-    try{
+if (!isset($_SESSION["usuarioId"])) {
+    $_SESSION["usuarioId"] = 0;
+}
+
+require_once("utiles/variables.php");
+require_once("utiles/funciones.php");
+try {
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
-    
+
     $sqlUsuario = "SELECT nombre, avatar FROM usuarios WHERE id = $_SESSION[usuarioId]";
-    
+
     $resultado = resultadoConsulta($conexion, $sqlUsuario);
 
     $registroUsu = $resultado->fetch(PDO::FETCH_ASSOC);
-    
+
     cerrarPDO();
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
-    
+
     $sql = "SELECT titulo, r.url AS url FROM rallys r WHERE estado = 1";
-    
+
     $resultado = resultadoConsulta($conexion, $sql);
 
     $registro = $resultado->fetch(PDO::FETCH_ASSOC);
-    
+
     cerrarPDO();
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
-    
+
     $sql = "SELECT u.nombre AS ganador, u.apellidos AS ganadorApellidos, f.titulo AS titulo_ganadora, f.url AS foto_ganadora
         FROM fotos f
         JOIN usuarios u ON f.usuario_id = u.id
@@ -47,19 +47,20 @@
         WHERE r.id = (SELECT id FROM rallys WHERE estado = 2 ORDER BY id DESC LIMIT 1)
         ORDER BY votos DESC
         LIMIT 1;";
-    
+
     $resultado = resultadoConsulta($conexion, $sql);
 
     $registro2 = $resultado->fetch(PDO::FETCH_ASSOC);
-    
+
     cerrarPDO();
-    }catch(PDOException $e){
-        echo "Error: " . $e->getMessage();
-    }
-    
-?>    
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,83 +70,69 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="d-flex flex-column min-vh-100">
     <header class="bg-primary text-white py-3">
         <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="index.php">
-            <img class="logo me-2" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
-            <span class="titulo-link">Rally Fotográfico</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <ul class="navbar-nav text-center">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="index.php">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="galeriaActiva.php">Galería Activa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="todasGalerias.php">Todas Las Galerías</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="fotosGanadoras.php">Fotos Ganadoras</a>
-                </li>
-            </ul>
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="index.php">
+                    <img class="logo me-2" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
+                    <span class="titulo-link">Rally Fotográfico</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse navbar-collapse-center justify-content-between" id="navbarNav">
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link text-white" href="index.php">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="galeriaActiva.php">Galería Activa</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="todasGalerias.php">Todas Las Galerías</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="fotosGanadoras.php">Fotos Ganadoras</a></li>
+                    </ul>
 
-            <div class="d-flex justify-content-end align-items-center">
-                    <ul class="navbar-nav text-center">
-                        <?php if ($_SESSION["rol"] == 1) { ?>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="admin.php">Panel de Control</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white d-flex align-items-center" href="perfil.php">
-                                    <i class="bi bi-person-fill me-1 text-white"></i> Hola,
-                                    <?php echo $registroUsu["nombre"] ?> 
-                                </a>
-                            </li>
+                    <div class="d-flex align-items-center gap-2">
+                        <ul class="navbar-nav mb-2 mb-lg-0">
+                            <?php if ($_SESSION["rol"] == 1): ?>
+                                <li class="nav-item"><a class="nav-link text-white" href="admin.php">Panel de Control</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white d-flex align-items-center" href="perfil.php">
+                                        <i class="bi bi-person-fill me-1"></i> Hola, <?= htmlspecialchars($registroUsu["nombre"]) ?>
+                                    </a>
+                                </li>
+                            <?php elseif ($_SESSION["rol"] == 2): ?>
+                                <li class="nav-item"><a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white d-flex align-items-center" href="perfil.php">
+                                        <i class="bi bi-person-fill me-1"></i> Hola, <?= htmlspecialchars($registroUsu["nombre"]) ?>
+                                    </a>
+                                </li>
+                            <?php else: ?>
+                                <li class="nav-item"><a class="nav-link text-white" href="login/login.php">Iniciar Sesión</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" href="login/registro.php">Registrarse</a></li>
+                            <?php endif; ?>
                         </ul>
-                        <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar" width="50" height="50" class="rounded-circle ms-2" style="object-fit: cover;">
-                        <?php } elseif ($_SESSION["rol"] == 2) { ?>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white d-flex align-items-center" href="perfil.php">
-                                    <i class="bi bi-person-fill me-1 text-white"></i> Hola,
-                                    <?php echo $registroUsu["nombre"] ?> 
-                                </a>
-                            </li>
-                        </ul>
-                        <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar" width="50" height="50" class="rounded-circle ms-2" style="object-fit: cover;">
-                        <?php } else { ?>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="login/login.php">Iniciar Sesión</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="login/registro.php">Registrarse</a>
-                            </li>
-                        <?php } ?>
-                    
+
+                        <?php if ($_SESSION["rol"] == 1 || $_SESSION["rol"] == 2): ?>
+                            <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar"
+                                class="rounded-circle d-none d-md-block"
+                                width="50" height="50" style="object-fit: cover;">
+                        <?php endif; ?>
+
                     </div>
-        </div>
+
+                    <?php if ($_SESSION["rol"] != 0) { ?>
+                        <div class="w-100 text-center mt-3 d-lg-none">
+                            <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar" width="70" height="70" class="rounded-circle" style="object-fit: cover;">
+                        </div>
+                    <?php } ?>
+
+                </div>
+            </div>
+        </nav>
     </header>
 
 
@@ -171,7 +158,7 @@
                         </p>
                     </div>
                 </div>
-    
+
                 <section class="container my-5">
                     <div class="row">
                         <div class="col-md-4 mb-4">
@@ -217,12 +204,12 @@
                     </div>
                 </section>
             </div>
-    
+
             <div class="col-1"></div>
         </div>
     </main>
-    
-    
+
+
 
     <footer class="bg-primary text-white text-center py-3">
         <div class="row d-flex justify-content-between">
@@ -248,19 +235,19 @@
             </div>
 
         </div>
-        
+
     </footer>
 
     <button class="boton-sticky" onclick="scrollToTop()">↑</button>
 
     <div class="popup" id="popup" aria-live="assertive">
         <span class="cerrar" id="cerrar">X</span>
-        <p class="subsubtitulo text-center"><?php echo $registro2["titulo_ganadora"]?></p>
-        <img src="<?php echo $registro2["foto_ganadora"]?>" alt="<?php echo $registro2["titulo_ganadora"]?>" style="max-width: 100%; height: auto; margin: 0 auto; display: block;">
+        <p class="subsubtitulo text-center"><?php echo $registro2["titulo_ganadora"] ?></p>
+        <img src="<?php echo $registro2["foto_ganadora"] ?>" alt="<?php echo $registro2["titulo_ganadora"] ?>" style="max-width: 100%; height: auto; margin: 0 auto; display: block;">
     </div>
 
     <script>
-        function mostrar(){
+        function mostrar() {
             document.getElementById('popup').classList.add('mostrar');
         }
 
@@ -268,15 +255,19 @@
             document.getElementById('popup').classList.remove('mostrar');
         });
         document.addEventListener('keydown', (e) => {
-            if(e.key === "Escape")
-            document.getElementById('popup').classList.remove('mostrar');
+            if (e.key === "Escape")
+                document.getElementById('popup').classList.remove('mostrar');
         });
     </script>
     <script>
         function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

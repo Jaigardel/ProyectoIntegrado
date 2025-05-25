@@ -77,81 +77,65 @@ $fotos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body class="d-flex flex-column min-vh-100">
     <header class="bg-primary text-white py-3">
         <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="index.php">
-            <img class="logo me-2" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
-            <span class="titulo-link">Rally Fotográfico</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <ul class="navbar-nav text-center">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="index.php">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="galeriaActiva.php">Galería Activa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="todasGalerias.php">Todas Las Galerías</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="fotosGanadoras.php">Fotos Ganadoras</a>
-                </li>
-            </ul>
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="index.php">
+                    <img class="logo me-2" src="./imagenes/logo.webp" alt="Logo de la pagina, imagen de una camara">
+                    <span class="titulo-link">Rally Fotográfico</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse navbar-collapse-center justify-content-between" id="navbarNav">
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link text-white" href="index.php">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="galeriaActiva.php">Galería Activa</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="todasGalerias.php">Todas Las Galerías</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="fotosGanadoras.php">Fotos Ganadoras</a></li>
+                    </ul>
 
-            <div class="d-flex justify-content-end align-items-center">
-                    <ul class="navbar-nav text-center">
-                        <?php if ($_SESSION["rol"] == 1) { ?>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="admin.php">Panel de Control</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white d-flex align-items-center" href="perfil.php">
-                                    <i class="bi bi-person-fill me-1 text-white"></i> Hola,
-                                    <?php echo $registroUsu["nombre"] ?> 
-                                </a>
-                            </li>
+                    <div class="d-flex align-items-center gap-2">
+                        <ul class="navbar-nav mb-2 mb-lg-0">
+                            <?php if ($_SESSION["rol"] == 1): ?>
+                                <li class="nav-item"><a class="nav-link text-white" href="admin.php">Panel de Control</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white d-flex align-items-center" href="perfil.php">
+                                        <i class="bi bi-person-fill me-1"></i> Hola, <?= htmlspecialchars($registroUsu["nombre"]) ?>
+                                    </a>
+                                </li>
+                            <?php elseif ($_SESSION["rol"] == 2): ?>
+                                <li class="nav-item"><a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white d-flex align-items-center" href="perfil.php">
+                                        <i class="bi bi-person-fill me-1"></i> Hola, <?= htmlspecialchars($registroUsu["nombre"]) ?>
+                                    </a>
+                                </li>
+                            <?php else: ?>
+                                <li class="nav-item"><a class="nav-link text-white" href="login/login.php">Iniciar Sesión</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" href="login/registro.php">Registrarse</a></li>
+                            <?php endif; ?>
                         </ul>
-                        <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar" width="50" height="50" class="rounded-circle ms-2" style="object-fit: cover;">
-                        <?php } elseif ($_SESSION["rol"] == 2) { ?>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="usuario.php">Ver mis Fotos</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="./login/cerrarSesion.php">Cerrar Sesión</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white d-flex align-items-center" href="perfil.php">
-                                    <i class="bi bi-person-fill me-1 text-white"></i> Hola,
-                                    <?php echo $registroUsu["nombre"] ?> 
-                                </a>
-                            </li>
-                        </ul>
-                        <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar" width="50" height="50" class="rounded-circle ms-2" style="object-fit: cover;">
-                        <?php } else { ?>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="login/login.php">Iniciar Sesión</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="login/registro.php">Registrarse</a>
-                            </li>
-                        <?php } ?>
-                    
+
+                        <?php if ($_SESSION["rol"] == 1 || $_SESSION["rol"] == 2): ?>
+                            <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar"
+                                class="rounded-circle d-none d-md-block"
+                                width="50" height="50" style="object-fit: cover;">
+                        <?php endif; ?>
+
                     </div>
 
-        </div>
+                    <?php if ($_SESSION["rol"] != 0) { ?>
+                        <div class="w-100 text-center mt-3 d-lg-none">
+                            <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar" width="70" height="70" class="rounded-circle" style="object-fit: cover;">
+                        </div>
+                    <?php } ?>
+
+                </div>
+            </div>
+        </nav>
     </header>
 
 
