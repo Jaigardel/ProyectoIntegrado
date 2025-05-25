@@ -26,7 +26,7 @@ if($email == "" || $token == ""){
     exit();
 }elseif($token != $tokenBBDD){
     echo "<h1 class='error'>Error de autenticación, el enlace no es válido despues de un uso.</h1>";
-    header("Refresh: 3; url=login.php");
+    header("Refresh: 10; url=login.php");
     exit();
 }else{
     if($_SERVER["REQUEST_METHOD"] == "POST"){
