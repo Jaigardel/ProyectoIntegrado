@@ -10,11 +10,18 @@
 
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
-    $sql = "SELECT id, nombre, apellidos, email, estado FROM usuarios WHERE rol_id = 2";
-    $stmt = $conexion->prepare($sql);
+    // Usuarios activos o inactivos
+    $sqlActivos = "SELECT id, nombre, apellidos, email, estado FROM usuarios WHERE rol_id = 2 AND estado IN (0, 1)";
+    $stmt = $conexion->prepare($sqlActivos);
     $stmt->execute();
-    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $conexion = null;
+    $usuariosActivos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Usuarios bloqueados
+    $sqlBloqueados = "SELECT id, nombre, apellidos, email FROM usuarios WHERE rol_id = 2 AND estado = 2";
+    $stmt = $conexion->prepare($sqlBloqueados);
+    $stmt->execute();
+    $usuariosBloqueados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>  
 <!DOCTYPE html>
@@ -117,38 +124,69 @@
                 </div>
                 <hr class="my-5 text-white">  
 
-                <h3 class="mb-4 text-center text-white">Gestión de Usuarios</h3>
-                <div class="table-responsive">
-                <table class="table table-bordered table-hover text-center">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Apellidos</th>
-                            <th>Email</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($usuarios as $usuario): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($usuario['nombre']) ?></td>
-                                <td><?= htmlspecialchars($usuario['apellidos']) ?></td>
-                                <td><?= htmlspecialchars($usuario['email']) ?></td>
-                                <td>
-                                    <?= $usuario['estado'] ? 'Activo' : 'Inactivo' ?>
-                                </td>
-                                <td>
-                                    <a href="cambiarEstadoUsuario.php?usuario_id=<?= $usuario['id'] ?>&nuevo_estado=<?= $usuario['estado'] ? 0 : 1 ?>" 
-                                    class="btn btn-sm btn-<?= $usuario['estado'] ? 'danger' : 'success' ?> boton-accion">
-                                        <?= $usuario['estado'] ? 'Inactivar' : 'Activar' ?>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-                </div>
+<h3 class="mb-4 text-center text-white">Usuarios Activos / Inactivos</h3>
+<table class="table table-bordered table-hover text-center">
+<thead class="table-primary">
+<tr>
+    <th>Nombre</th>
+    <th>Apellidos</th>
+    <th>Email</th>
+    <th>Estado</th>
+    <th>Acción</th>
+    <th>Bloqueo</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($usuariosActivos as $usuario): ?>
+<tr>
+    <td><?= htmlspecialchars($usuario['nombre']) ?></td>
+    <td><?= htmlspecialchars($usuario['apellidos']) ?></td>
+    <td><?= htmlspecialchars($usuario['email']) ?></td>
+    <td><?= $usuario['estado'] ? 'Activo' : 'Inactivo' ?></td>
+    <td>
+        <a href="cambiarEstadoUsuario.php?usuario_id=<?= $usuario['id'] ?>&nuevo_estado=<?= $usuario['estado'] ? 0 : 1 ?>" 
+            class="btn btn-sm btn-<?= $usuario['estado'] ? 'danger' : 'success' ?>">
+            <?= $usuario['estado'] ? 'Inactivar' : 'Activar' ?>
+        </a>
+    </td>
+    <td>
+        <a href="cambiarEstadoUsuario.php?usuario_id=<?= $usuario['id'] ?>&nuevo_estado=2" 
+            class="btn btn-sm btn-warning">
+            Bloquear
+        </a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+
+<h3 class="mb-4 text-center text-white">Usuarios Bloqueados</h3>
+<table class="table table-bordered table-hover text-center">
+<thead class="table-danger">
+<tr>
+    <th>Nombre</th>
+    <th>Apellidos</th>
+    <th>Email</th>
+    <th>Acción</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($usuariosBloqueados as $usuario): ?>
+<tr>
+    <td><?= htmlspecialchars($usuario['nombre']) ?></td>
+    <td><?= htmlspecialchars($usuario['apellidos']) ?></td>
+    <td><?= htmlspecialchars($usuario['email']) ?></td>
+    <td>
+        <a href="cambiarEstadoUsuario.php?usuario_id=<?= $usuario['id'] ?>&nuevo_estado=0" 
+            class="btn btn-sm btn-success">
+            Desbloquear
+        </a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+
 
                 
                             

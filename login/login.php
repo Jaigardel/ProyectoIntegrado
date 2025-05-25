@@ -24,6 +24,8 @@
 
                 if($resultado["estado"] == 0){
                     $error = "Tu cuenta está inactivada, comprueba tu correo o contacta con un administrador.";
+                } elseif($resultado["estado"] == 2){
+                    $error = "Tu cuenta está bloqueada, contacta con un administrador.";
                 } elseif(password_verify($clave, $resultado["contrasena"])){
                     $_SESSION["usuarioId"] = $resultado["id"];
                     $_SESSION["rol"] = $resultado["rol_id"];

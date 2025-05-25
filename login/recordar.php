@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"]=="POST") {
         $_SESSION["errorEmail"] = true;
     } else {
         $conexion = conectarPDO($host, $user, $password, $bbdd);
-        $sql = "SELECT email, nombre FROM usuarios WHERE email=?";
+        $sql = "SELECT email, nombre, estado FROM usuarios WHERE email=?";
         $resultado = $conexion->prepare($sql);
         $resultado->bindParam(1, $email);
         $resultado->execute();
@@ -29,6 +29,12 @@ if ($_SERVER["REQUEST_METHOD"]=="POST") {
         } else {
             $usuario = $resultado->fetch(PDO::FETCH_ASSOC);
             cerrarPDO();
+            if ($usuario['estado'] == 2) {
+                $_SESSION["mensajeResultado"] = "❌ Tu cuenta está bloqueada, contacta con un administrador.";
+                $_SESSION["estadoResultado"] = "error";
+                header("Location: recordar.php");
+                exit();
+            }
 
             $token = bin2hex(openssl_random_pseudo_bytes(16));
 
