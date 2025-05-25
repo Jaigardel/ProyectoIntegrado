@@ -27,14 +27,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
             if($_POST["password"] === $confirmar_password){
                 $token = bin2hex(random_bytes(16)); 
-
-                $sqlInsert = "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol_id, estado, token) VALUES (:nombre, :apellidos, :email, :contrasena, 2, 0, :token)";
+                $avatar = "https://xlwpajxruqllvilzaeaa.supabase.co/storage/v1/object/public/fotos//avatar.png";
+                $sqlInsert = "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol_id, estado, token, avatar) VALUES (:nombre, :apellidos, :email, :contrasena, 2, 0, :token, :avatar)";
                 $stmtInsert = $conexion->prepare($sqlInsert);
                 $stmtInsert->bindParam(':nombre', $nombre);
                 $stmtInsert->bindParam(':apellidos', $apellidos);
                 $stmtInsert->bindParam(':email', $email);
                 $stmtInsert->bindParam(':contrasena', $password);
                 $stmtInsert->bindParam(':token', $token);
+                $stmtInsert->bindParam(':avatar', $avatar);
 
                 if($stmtInsert->execute()){
                     try {

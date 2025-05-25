@@ -9,6 +9,16 @@
     }
 
     $conexion = conectarPDO($host, $user, $password, $bbdd);
+    
+    $sqlUsuario = "SELECT nombre, avatar FROM usuarios WHERE id = $_SESSION[usuarioId]";
+    
+    $resultado = resultadoConsulta($conexion, $sqlUsuario);
+
+    $registroUsu = $resultado->fetch(PDO::FETCH_ASSOC);
+    
+    cerrarPDO();
+
+    $conexion = conectarPDO($host, $user, $password, $bbdd);
 
     $sql = "SELECT id, nombre FROM categorias";
     $stmt = $conexion->prepare($sql);
@@ -55,33 +65,53 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav text-center">
-                <?php if ($_SESSION["rol"] == 1){ ?>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="../admin.php">Panel de Control</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="../usuario.php">Ver mis Fotos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="../login/cerrarSesion.php">Cerrar Sesión</a>
-                    </li>
-                <?php }elseif ($_SESSION["rol"] == 2){ ?>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="../usuario.php">Ver mis Fotos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="../login/cerrarSesion.php">Cerrar Sesión</a>
-                    </li>
-                <?php }else{?>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="../login/login.php">Iniciar Sesión</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="../login/registro.php">Registrarse</a>
-                    </li>
-                <?php } ?>
-
+            <div class="d-flex justify-content-end align-items-center">
+                    <ul class="navbar-nav text-center">
+                        <?php if ($_SESSION["rol"] == 1) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="../admin.php">Panel de Control</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="../usuario.php">Ver mis Fotos</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="../login/cerrarSesion.php">Cerrar Sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center" href="../perfil.php">
+                                    <i class="bi bi-person-fill me-1 text-white"></i> Hola,
+                                    <?php echo $registroUsu["nombre"] ?> 
+                                </a>
+                            </li>
+                        </ul>
+                        <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar" width="50" height="50" class="rounded-circle ms-2" style="object-fit: cover;">
+                        <?php } elseif ($_SESSION["rol"] == 2) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="../usuario.php">Ver mis Fotos</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="../login/cerrarSesion.php">Cerrar Sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center" href="../perfil.php">
+                                    <i class="bi bi-person-fill me-1 text-white"></i> Hola,
+                                    <?php echo $registroUsu["nombre"] ?> 
+                                </a>
+                            </li>
+                        </ul>
+                        <img src="<?= htmlspecialchars($registroUsu['avatar']) ?>" alt="Avatar" width="50" height="50" class="rounded-circle ms-2" style="object-fit: cover;">
+                        <?php } else { ?>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="../login/login.php">Iniciar Sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="../login/registro.php">Registrarse</a>
+                            </li>
+                        <?php } ?>
+                    
+                    </div>
         </div>
     </header>
     <main class="container-fluid flex-grow-1">
