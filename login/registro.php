@@ -1,47 +1,90 @@
 <?php 
-    require_once("../utiles/variables.php");
-    require_once("../utiles/funciones.php");
+session_start();
+require_once("../utiles/variables.php");
+require_once("../utiles/funciones.php");
+require_once('../PHPMailer/src/PHPMailer.php');
+require_once('../PHPMailer/src/SMTP.php');
+require_once('../PHPMailer/src/Exception.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-   
-    if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $conexion = conectarPDO($host, $user, $password, $bbdd);
-        
-        $sql = "SELECT id FROM usuarios WHERE email = :email";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':email', $_POST["email"]);
-        $stmt->execute();
-        if($stmt->rowCount() > 0){
-            $error = "El email ya está registrado.";
-        }else{
-            if(isset($_POST["nombre"]) && isset($_POST["apellidos"]) && isset($_POST["password"]) && isset($_POST["confirmar_password"])){
-                $nombre = $_POST["nombre"];
-                $apellidos = $_POST["apellidos"];
-                $email = $_POST["email"];
-                $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
-                $confirmar_password = $_POST["confirmar_password"];
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    $conexion = conectarPDO($host, $user, $password, $bbdd);
 
-                if($_POST["password"] === $confirmar_password){
-                    $sqlInsert = "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol_id, estado) VALUES (:nombre, :apellidos, :email, :contrasena, 2, 0)";
-                    $stmtInsert = $conexion->prepare($sqlInsert);
-                    $stmtInsert->bindParam(':nombre', $nombre);
-                    $stmtInsert->bindParam(':apellidos', $apellidos);
-                    $stmtInsert->bindParam(':email', $email);
-                    $stmtInsert->bindParam(':contrasena', $password);
-                    if($stmtInsert->execute()){
-                        $exito = "Usuario registrado con éxito. Un administrador validará tu cuenta lo antes posible.";
-                    }else{
-                        $error = "Error al registrar el usuario.";
+    $sql = "SELECT id FROM usuarios WHERE email = :email";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bindParam(':email', $_POST["email"]);
+    $stmt->execute();
+    if($stmt->rowCount() > 0){
+        $error = "El email ya está registrado.";
+    }else{
+        if(isset($_POST["nombre"]) && isset($_POST["apellidos"]) && isset($_POST["password"]) && isset($_POST["confirmar_password"])){
+            $nombre = $_POST["nombre"];
+            $apellidos = $_POST["apellidos"];
+            $email = $_POST["email"];
+            $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
+            $confirmar_password = $_POST["confirmar_password"];
+
+            if($_POST["password"] === $confirmar_password){
+                $token = bin2hex(random_bytes(16)); 
+
+                $sqlInsert = "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol_id, estado, token) VALUES (:nombre, :apellidos, :email, :contrasena, 2, 0, :token)";
+                $stmtInsert = $conexion->prepare($sqlInsert);
+                $stmtInsert->bindParam(':nombre', $nombre);
+                $stmtInsert->bindParam(':apellidos', $apellidos);
+                $stmtInsert->bindParam(':email', $email);
+                $stmtInsert->bindParam(':contrasena', $password);
+                $stmtInsert->bindParam(':token', $token);
+
+                if($stmtInsert->execute()){
+                    try {
+                        $mail = new PHPMailer(true);
+                        $mail->isSMTP();
+                        $mail->Host = 'smtp.zoho.eu';
+                        $mail->SMTPAuth = true;
+                        $mail->Username = 'rallyfotografico@zohomail.eu'; 
+                        $mail->Password = 'avLs Y7PP 8T4i';  
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                        $mail->Port = 465;
+                        $mail->CharSet = 'UTF-8';
+
+                        $mail->setFrom('rallyfotografico@zohomail.eu', 'Rally Fotográfico');
+                        $mail->addAddress($email, $nombre);
+
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Activa tu cuenta - Rally Fotográfico';
+
+                        $urlActivacion = "https://jaigardel.byethost18.com/activar.php?email=" . urlencode($email) . "&token=" . urlencode($token);
+
+                        $mail->Body = "
+                            <h2>Hola " . htmlspecialchars($nombre) . "!</h2>
+                            <p>Gracias por registrarte en <strong>Rally Fotográfico</strong>.</p>
+                            <p>Para activar tu cuenta, haz clic en el siguiente enlace:</p>
+                            <p><a href='$urlActivacion'>Activar mi cuenta</a></p>
+                            <br>
+                            <p>Si no solicitaste este registro, ignora este mensaje.</p>
+                            <hr>
+                            <p>Saludos,<br>Equipo Rally Fotográfico</p>
+                        ";
+
+                        $mail->send();
+                        $_SESSION["mensajeResultado"] = "✅ Usuario registrado correctamente. Revisa tu correo para activar la cuenta.";
+                        $_SESSION["estadoResultado"] = "exito";
+                    } catch (Exception $e) {
+                        $_SESSION["mensajeResultado"] = "❌ Error al enviar el correo: " . $mail->ErrorInfo;
                     }
                 }else{
-                    $error = "Las contraseñas no coinciden.";
+                    $error = "Error al registrar el usuario.";
                 }
+            }else{
+                $error = "Las contraseñas no coinciden.";
             }
         }
-        cerrarPDO();
     }
+    cerrarPDO();
+}
+?>
 
-
-?>    
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -152,12 +195,12 @@
                             <button type="submit" class="btn btn-primary">Registrarse</button>
                         </div>
                     </form>
-                    <?php if (isset($error)): ?>
-                        <p class="text-danger mt-3"><?php echo $error; ?></p>
-                    <?php endif; ?>
-                    <?php if (isset($exito)): ?>
-                        <p class="text-success mt-3"><?php echo $exito; ?></p>
-                    <?php endif; ?>
+                    <?php if (!empty($_SESSION["mensajeResultado"])){ ?>
+                        <div id="mensaje" class="text-center my-3 fw-bold"
+                            style="color: <?= $_SESSION['estadoResultado'] === 'exito' ? 'green' : 'red' ?>">
+                            <?= $_SESSION["mensajeResultado"] ?>
+                        </div>
+                    <?php }; ?>
                     <p class="mt-3">¿Ya tienes una cuenta? <a href="login.php" style="color:blue">Inicia sesión aquí</a></p>
                 </div>    
             </div>

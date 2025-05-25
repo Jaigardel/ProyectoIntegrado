@@ -1,47 +1,65 @@
-<?php 
-    require_once("../utiles/variables.php");
-    require_once("../utiles/funciones.php");
+<?php
+if(!isset($_SESSION["errorClave"])){
+    $_SESSION["errorClave"] = false;
+}
+require_once("../utiles/variables.php");
+require_once("../utiles/funciones.php");
 
-    session_start();
-
-    if($_SERVER["REQUEST_METHOD"] == "POST"){
-        if(!isset($_POST["email"]) || !isset($_POST["contrasena"]) ||
-            empty($_POST["email"]) || empty($_POST["contrasena"])){
-            $error = "Por favor, completa todos los campos.";
-        } elseif(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)){
-            $error = "El formato del email no es correcto.";
-        } else {
-            $clave = $_POST["contrasena"];
-            $conexion = conectarPDO($host, $user, $password, $bbdd);
-
-            $sql = "SELECT id, rol_id, contrasena, estado FROM usuarios WHERE email = :email";
-            $stmt = $conexion->prepare($sql);
-            $stmt->bindParam(':email', $_POST["email"]);
-            $stmt->execute();
-
-            if($stmt->rowCount() > 0){
-                $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if($resultado["estado"] == 0){
-                    $error = "Tu cuenta está inactivada, comprueba tu correo o contacta con un administrador.";
-                } elseif($resultado["estado"] == 2){
-                    $error = "Tu cuenta está bloqueada, contacta con un administrador.";
-                } elseif(password_verify($clave, $resultado["contrasena"])){
-                    $_SESSION["usuarioId"] = $resultado["id"];
-                    $_SESSION["rol"] = $resultado["rol_id"];
-                    header("Location: ../index.php");
-                    exit();
-                } else {
-                    $error = "Email o contraseña incorrectos.";
-                }
-            } else {
-                $error = "Email o contraseña incorrectos.";
+$email = obtenerValorCampo("email");
+$token = obtenerValorCampo("token");
+$longitudMinima = 6;
+$logintudMaxima = 20;
+$conexion = conectarPDO($host, $user, $password, $bbdd);
+            $sql = "SELECT token FROM usuarios WHERE email=?";
+            $resultado = $conexion->prepare($sql);
+			$resultado->bindParam(1, $email);
+            $resultado->execute();
+            if($resultado->rowCount()>0){
+                $row = $resultado->fetch();
+                $tokenBBDD = $row["token"];
+                cerrarPDO();
             }
 
+if($email == "" || $token == ""){
+    echo "<h1 class='error'>Acceso Denegado.</h1>";
+    header("Refresh: 3; url=../index.php");
+    exit();
+}elseif($token != $tokenBBDD){
+    echo "<h1 class='error'>Error de autenticación, el enlace no es válido despues de un uso.</h1>";
+    header("Refresh: 3; url=login.php");
+    exit();
+}else{
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $clave1 = obtenerValorCampo("clave1");
+        $clave2 = obtenerValorCampo("clave2");
+
+       if($clave1 != $clave2){
+            $_SESSION["errorClave"] = true;
+        } elseif(!validarLongitudCadena($clave1, $longitudMinima, $logintudMaxima)){
+            $_SESSION["errorClave"] = true;
+        } else {
+            $conexion = conectarPDO($host, $user, $password, $bbdd);
+            $sql = "UPDATE usuarios SET estado=1, contrasena=?, token = null WHERE email=?";
+            $resultado = $conexion->prepare($sql);
+            $clave = password_hash($clave1, PASSWORD_BCRYPT);
+            $resultado->bindParam(1, $clave);
+            $resultado->bindParam(2, $email);
+            $resultado->execute();
+
+            if ($resultado->rowCount() > 0) {
+                $_SESSION["mensajeResultado"] = "✅ Contraseña cambiada correctamente.";
+                $_SESSION["estadoResultado"] = "exito";
+            } else {
+                $_SESSION["mensajeResultado"] = "❌ No se ha podido cambiar la contraseña.";
+                $_SESSION["estadoResultado"] = "error";
+            }
             cerrarPDO();
         }
+
     }
-?>    
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -115,33 +133,39 @@
     <main class="container-fluid flex-grow-1">
         <div class="row h-100">
             <div class="col-10 my-5 text-center" style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 400px; margin: auto;">
-                <h3>Inicia sesión</h3>
-                <form method="POST" action="" id="loginForm">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Correo Electrónico:</label>
-                        <input type="email" class="form-control" id="email" name="email" required
-                               value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
-                    </div>
-                
-                    <div class="mb-3">
-                        <label for="contrasena" class="form-label">Contraseña:</label>
-                        <input type="password" class="form-control" id="contrasena" name="contrasena" required minlength="6">
-                        <small id="passwordHelp" class="form-text text-muted">La contraseña debe tener al menos 6 caracteres.</small>
-                    </div>
-                   
-                    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
-                </form>
-
-                <?php if (isset($error)): ?>
-                    <p class="text-danger mt-3"><?= htmlspecialchars($error) ?></p>
-                <?php endif; ?>
-
-                <p class="mt-3">¿No tienes una cuenta? <a href="registro.php" style="color:blue">Regístrate aquí</a></p>
-                <p class="mt-3">¿Has olvidado tu contraseña? <a href="recordar.php" style="color:blue">Recupérala aquí</a></p>
-            </div>
+    <h1>Nueva Contraseña</h1>     
+    <?php if (!empty($_SESSION["mensajeResultado"])){ ?>
+        <div id="mensaje" class="text-center my-3 fw-bold"
+            style="color: <?= $_SESSION['estadoResultado'] === 'exito' ? 'green' : 'red' ?>">
+            <?= $_SESSION["mensajeResultado"] ?>
         </div>
-    </main>
+    <?php }; ?>
+            <form method="POST" action="establecer.php" id="establecerForm">
+            <div class="m-3 text-center">
+                <label for="clave1" class="form-label">Nueva Contraseña:</label>
+                <input type="password" class="form-control" id="clave1" name="clave1" required>
+            </div>
 
+            <div class="m-3 text-center">
+                <label for="clave2" class="form-label">Repetir Contraseña:</label>
+                <input type="password" class="form-control" id="clave2" name="clave2" required>
+            </div>
+
+            <?php if (!empty($_SESSION["errorClave"])): ?>
+                <p class="text-danger text-center">La clave no tiene al menos 6 caracteres o no coincide</p>
+            <?php endif; ?>
+
+            <input type="hidden" name="email" value="<?= htmlspecialchars($email ?? '') ?>">
+            <input type="hidden" name="token" value="<?= htmlspecialchars($token ?? '') ?>">
+
+            <div class="m-3 text-center">
+                <button type="submit" class="btn btn-primary w-100">Establecer Contraseña</button>
+            </div>
+        </form>
+
+    <p><a href="login.php" class="mt-3 btn btn-primary w-100">Volver al Login</a></p>
+            </div>
+    </main>
     <footer class="bg-primary text-white text-center py-3">
         <div class="row d-flex justify-content-between">
             <div class="col-sm-4 order-1 order-md-2 text-center">
@@ -165,16 +189,18 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            const password = document.getElementById('contrasena').value;
-            if (password.length < 6) {
-                event.preventDefault();
-                alert("La contraseña debe tener al menos 6 caracteres.");
-            }
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <?php if (!empty($_SESSION["estadoResultado"]) && $_SESSION["estadoResultado"] === "exito"){
+        unset($_SESSION["mensajeResultado"]);
+        unset($_SESSION["estadoResultado"]);
+    ?>
+        
+<script>
+    setTimeout(() => {
+        window.location.href = "login.php";
+    }, 3000); 
+</script>
+<?php }; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<?php }?>
