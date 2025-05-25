@@ -3,6 +3,9 @@ require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
 
 session_start();
+require_once("../utiles/variables.php");
+require_once("../utiles/funciones.php");
+
 if (!isset($_SESSION["rol"]) || $_SESSION["rol"] != 1) {
     header("Location: ../index.php");
     exit();
@@ -35,14 +38,15 @@ if ($rally && $rally['estado'] == 0) {
         $stmtDelete->bindParam(':id', $rallyId);
         $stmtDelete->execute();
 
-        echo "<div class='alert alert-success text-center'>✅ Rally borrado correctamente. Redirigiendo...</div>";
+        $_SESSION['mensaje'] = ['tipo' => 'success', 'texto' => '✅ Rally borrado correctamente.'];
     } else {
-        echo "<div class='alert alert-warning text-center'>⚠️ No se puede borrar el rally porque tiene fotos asociadas.</div>";
+        $_SESSION['mensaje'] = ['tipo' => 'warning', 'texto' => '⚠️ No se puede borrar el rally porque tiene fotos asociadas.'];
     }
 } else {
-    echo "<div class='alert alert-danger text-center'>⚠️ Solo se pueden borrar rallys inactivos.</div>";
+    $_SESSION['mensaje'] = ['tipo' => 'danger', 'texto' => '⚠️ Solo se pueden borrar rallys inactivos.'];
 }
 
-header("Refresh: 3; url=gestionRallys.php");
+header("Location: gestionRallys.php");
 exit();
+
 ?>

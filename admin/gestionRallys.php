@@ -119,6 +119,13 @@
             <div class="col-1"></div>
             <div class="col-10 my-5 text-center" style="background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 800px; margin: auto;">
                 <h3>Gestión de Rallys</h3>
+                <?php if (isset($_SESSION['mensaje'])): ?>
+                    <div class="alert alert-<?= htmlspecialchars($_SESSION['mensaje']['tipo']) ?> alert-dismissible fade show mt-3" role="alert">
+                        <?= htmlspecialchars($_SESSION['mensaje']['texto']) ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                    </div>
+                    <?php unset($_SESSION['mensaje']); ?>
+                <?php endif; ?>
                 <?php
                     $sqlRallys = "SELECT id, titulo, descripcion, fecha_inicio, fecha_fin, estado FROM rallys ORDER BY fecha_inicio DESC";
                     $stmtRallys = $conexion->prepare($sqlRallys);
