@@ -109,7 +109,7 @@
                 <form id="formularioFoto" name="formularioFoto">
                     <div class="mb-3">
                     <label for="inputArchivo" class="form-label">Selecciona una imagen (jpg, png):</label>
-                    <input type="file" class="form-control" id="inputArchivo" accept="image/jpg, image/png" required>
+                    <input type="file" class="form-control" id="inputArchivo" accept="image/jpeg, image/png" required>
                     </div>
 
                     <div class="mb-3">
