@@ -320,46 +320,63 @@ if ($hayGaleriaActiva) {
 
     <script>
         fetch('votos.php')
-        .then(response => response.json())
-        .then(data => {
+.then(response => response.json())
+.then(data => {
+    // Ordenar por votos descendente
+    const sorted = [...data].sort((a, b) => b.votos - a.votos);
 
-            const votos = data.map(foto => foto.votos);
-            const labels = data.map(foto => foto.titulo);
+    // Obtener los títulos de los 5 mejores
+    const top5Titles = sorted.slice(0, 5).map(foto => foto.titulo);
 
-            const datosVotos = votos.every(voto => voto === 0) ? [1] : votos; 
-            const labelsVotos = votos.every(voto => voto === 0) ? ["No hay votos"] : labels; 
+    const votos = data.map(foto => foto.votos);
+    const labels = data.map(foto => foto.titulo);
 
-            const ctx = document.getElementById('graficoVotos').getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labelsVotos,
-                    datasets: [{
-                        label: 'Votos',
-                        data: datosVotos,
-                        backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFD700'],
-                    }]
+    const datosVotos = votos.every(voto => voto === 0) ? [1] : votos; 
+    const labelsVotos = votos.every(voto => voto === 0) ? ["No hay votos"] : labels; 
+
+    const ctx = document.getElementById('graficoVotos').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labelsVotos,
+            datasets: [{
+                label: 'Votos',
+                data: datosVotos,
+                backgroundColor: [
+                    '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                    '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                    '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000',
+                    '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080',
+                    '#ffffff', '#000000', '#ff7f00', '#1f78b4', '#b15928',
+                    '#6a3d9a', '#b2df8a', '#fb9a99', '#cab2d6', '#ffff99'
+                ],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right', // Cambia 'top' por 'right'
+                    labels: {
+                        filter: function(item, chart) {
+                            return top5Titles.includes(item.text);
+                        }
+                    }
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return tooltipItem.label + ': ' + tooltipItem.raw + ' votos';
-                                }
-                            }
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' votos';
                         }
                     }
                 }
-            });
-        })
-        .catch(error => {
-            console.error('Error al obtener los datos:', error);
-        });
+            }
+        }
+    });
+})
+.catch(error => {
+    console.error('Error al obtener los datos:', error);
+});
 
     </script>
     <script>
